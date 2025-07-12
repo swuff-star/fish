@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace EntityStates.Fish
 {
-    public class BaseShootGun : BaseSkillState
+    public class BaseShootGun : BaseFishState
     {
         protected virtual GameObject MuzzleEffectPrefab => Commando.CommandoWeapon.FirePistol2.muzzleEffectPrefab;
         protected virtual GameObject HitEffectPrefab => Commando.CommandoWeapon.FirePistol2.hitEffectPrefab;
@@ -19,7 +19,7 @@ namespace EntityStates.Fish
         protected virtual float Range => 100f;
         protected virtual float BaseDuration => 1f;
         protected virtual float FirePercentTime => 0.0f;
-        protected virtual string FireSoundString => "Fire";
+        protected virtual string FireSoundString => "HenryShootPistol";
         protected virtual float RecoilAmplitude => 1f;
         protected virtual float MaxSpread => 1f;
         protected virtual float SpreadBloomValue => 0.3f;
@@ -31,6 +31,8 @@ namespace EntityStates.Fish
         private float duration;
         private Ray aimRay;
         private bool isCrit;
+
+        private bool hasFired;
 
         public override void OnEnter()
         {
@@ -51,8 +53,9 @@ namespace EntityStates.Fish
         {
             base.FixedUpdate();
 
-            if (fixedAge >= fireTime)
+            if (hasFired == false && fixedAge >= fireTime)
             {
+                hasFired = true;
                 Fire();
             }
 
@@ -99,6 +102,8 @@ namespace EntityStates.Fish
                 bulletAttack.Fire();
             }
             characterBody.AddSpreadBloom(SpreadBloomValue);
+
+            if (weaponController != null) weaponController.ConsumeAmmo();
         }
 
         public override InterruptPriority GetMinimumInterruptPriority()

@@ -41,6 +41,7 @@ namespace FishMod.Modules.Guns
         public abstract SkillDef primarySkillDef { get; }
         public abstract GameObject modelPrefab { get; }
         public abstract FishWeaponDef.AnimationSet animationSet { get; }
+        public abstract FishWeaponDef.AmmoType ammoType { get; }
         public abstract bool storedOnBack { get; }
 
         public virtual string weaponNameTokenFull
@@ -76,7 +77,7 @@ namespace FishMod.Modules.Guns
             Sprite icon = null;
             if (iconName != "") icon = FishSurvivor.instance.assetBundle.LoadAsset<Sprite>(iconName);
 
-            weaponDef = FishWeaponDef.CreateWeaponDefFromInfo(new FishWeaponDefInfo
+            weaponDef = CreateWeaponDefFromInfo(new FishWeaponDefInfo
             {
                 nameToken = "SWUFF_FISH_WEAPON_" + weaponNameToken + "_NAME",
                 descriptionToken = "SWUFF_FISH_WEAPON_" + weaponNameToken + "_DESC",
@@ -90,6 +91,7 @@ namespace FishMod.Modules.Guns
                 primarySkillDef = primarySkillDef,
                 modelPrefab = modelPrefab,
                 animationSet = animationSet,
+                ammoType = ammoType,
                 storedOnBack = storedOnBack,
             });
 

@@ -1,4 +1,5 @@
-﻿using RoR2;
+﻿using FishMod.Modules.Weapons;
+using RoR2;
 using RoR2.ContentManagement;
 using RoR2.Skills;
 using System;
@@ -59,6 +60,7 @@ namespace FishMod.Modules {
             contentPack.effectDefs.Add(effectDefs.ToArray());
 
             contentPack.itemDefs.Add(itemDefs.ToArray());
+            contentPack.itemDefs.Add(FishWeaponCatalog.itemDefs.ToArray());
 
             contentPack.networkSoundEventDefs.Add(networkSoundEventDefs.ToArray());
 

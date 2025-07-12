@@ -195,6 +195,10 @@ namespace FishMod.Modules
         {
             SkillDefInfo info = new SkillDefInfo(skillNameToken, skillNameToken, skillDescription, skillIcon, state, stateMachine, agile);
             info.requiredStock = 1;
+            info.stockToConsume = 1;
+            info.baseMaxStock = 1;
+            info.rechargeStock = 0;
+            info.baseRechargeInterval = 0;
 
             return CreateSkillDef(info);
         }      

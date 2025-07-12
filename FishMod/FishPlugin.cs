@@ -30,7 +30,7 @@ namespace FishMod
 
         public static FishPlugin instance;
 
-        void Awake()
+        private void Awake()
         {
             instance = this;
 

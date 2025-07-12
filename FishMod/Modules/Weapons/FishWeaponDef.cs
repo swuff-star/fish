@@ -19,6 +19,16 @@ namespace FishMod.Modules.Weapons
             Railgun
         }
 
+        public enum AmmoType
+        {
+            Bullet,
+            Shell,
+            Explosive,
+            Bolt,
+            Laser,
+            None
+        }
+
         [Header("General")]
         public string nameToken = "";
         public string descriptionToken = "";
@@ -33,6 +43,8 @@ namespace FishMod.Modules.Weapons
         public bool exposeWeakPoints = true;
         public bool roundReload = false;
         public bool canPickUpAmmo = true;
+        public AmmoType ammoType = AmmoType.None;
+        public int firstAvailableStage = 0;
 
         [Header("Skills")]
         public SkillDef primarySkillDef;
@@ -62,6 +74,8 @@ namespace FishMod.Modules.Weapons
             weaponDef.pickupAmmo = weaponDefInfo.pickupAmmo;
             weaponDef.reloadDuration = weaponDefInfo.reloadDuration;
             weaponDef.ammoName = weaponDefInfo.ammoName;
+            weaponDef.ammoType = weaponDefInfo.ammoType;
+            weaponDef.firstAvailableStage = weaponDefInfo.firstAvailableStage;
 
             weaponDef.primarySkillDef = weaponDefInfo.primarySkillDef;
 
@@ -84,6 +98,8 @@ namespace FishMod.Modules.Weapons
             public int pickupAmmo;
             public float reloadDuration;
             public string ammoName;
+            public AmmoType ammoType;
+            public int firstAvailableStage;
 
             public SkillDef primarySkillDef;
 

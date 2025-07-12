@@ -1,14 +1,18 @@
 ﻿using BepInEx.Configuration;
 using EntityStates;
+using EntityStates.Fish;
+using FishMod.Characters.Survivors.Fish.Components;
 using FishMod.Modules;
 using FishMod.Modules.Characters;
-using FishMod.Survivors.Fish.Components;
+using FishMod.Modules.Weapons.Guns;
 using FishMod.Survivors.Fish.SkillStates;
 using RoR2;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
+using static RoR2.GenericPickupController;
 using static RoR2.TeleporterInteraction;
 
 namespace FishMod.Survivors.Fish
@@ -113,6 +117,8 @@ namespace FishMod.Survivors.Fish
             InitializeSkins();
             InitializeCharacterMaster();
 
+            InitializeWeapons();
+
             AdditionalBodySetup();
 
             AddHooks();
@@ -121,7 +127,7 @@ namespace FishMod.Survivors.Fish
         private void AdditionalBodySetup()
         {
             AddHitboxes();
-            bodyPrefab.AddComponent<FishWeaponComponent>();
+            bodyPrefab.AddComponent<FishWeaponController>();
             //bodyPrefab.AddComponent<HuntressTrackerComopnent>();
             //anything else here
         }
@@ -235,70 +241,6 @@ namespace FishMod.Survivors.Fish
             primarySkillDef1.stepGraceDuration = 0.5f;
 
             Skills.AddPrimarySkills(bodyPrefab, primarySkillDef1);
-
-            SkillDef revolverDef = Skills.CreateSkillDef<SkillDef>(new SkillDefInfo
-            {
-                skillName = "FishRevolver",
-                skillNameToken = FISH_PREFIX + "REVOLVER_NAME",
-                skillDescriptionToken = FISH_PREFIX + "REVOLVER_DESCRIPTION",
-                skillIcon = assetBundle.LoadAsset<Sprite>("texSecondaryIcon"),
-
-                activationState = new SerializableEntityStateType(typeof(EntityStates.Fish.Guns.FireRevolver)),
-                activationStateMachineName = "Weapon",
-                interruptPriority = InterruptPriority.Skill,
-
-                baseRechargeInterval = 0f,
-                baseMaxStock = 1,
-
-                rechargeStock = 0,
-                requiredStock = 0,
-                stockToConsume = 0,
-
-                resetCooldownTimerOnUse = false,
-                fullRestockOnAssign = false,
-                dontAllowPastMaxStocks = false,
-                mustKeyPress = true,
-                beginSkillCooldownOnSkillEnd = false,
-
-                isCombatSkill = true,
-                canceledFromSprinting = false,
-                cancelSprintingOnActivation = true,
-                forceSprintDuringState = false,
-
-            });
-            Skills.AddPrimarySkills(bodyPrefab, revolverDef);
-
-            SkillDef machineGunDef = Skills.CreateSkillDef<SkillDef>(new SkillDefInfo
-            {
-                skillName = "FishMachineGun",
-                skillNameToken = FISH_PREFIX + "MACHINEGUN_NAME",
-                skillDescriptionToken = FISH_PREFIX + "MACHINEGUN_DESCRIPTION",
-                skillIcon = assetBundle.LoadAsset<Sprite>("texSecondaryIcon"),
-
-                activationState = new SerializableEntityStateType(typeof(EntityStates.Fish.Guns.FireMachinegun)),
-                activationStateMachineName = "Weapon",
-                interruptPriority = InterruptPriority.Skill,
-
-                baseRechargeInterval = 0f,
-                baseMaxStock = 1,
-
-                rechargeStock = 0,
-                requiredStock = 0,
-                stockToConsume = 0,
-
-                resetCooldownTimerOnUse = false,
-                fullRestockOnAssign = false,
-                dontAllowPastMaxStocks = false,
-                mustKeyPress = false,
-                beginSkillCooldownOnSkillEnd = false,
-
-                isCombatSkill = true,
-                canceledFromSprinting = false,
-                cancelSprintingOnActivation = true,
-                forceSprintDuringState = false,
-
-            });
-            Skills.AddPrimarySkills(bodyPrefab, machineGunDef);
         }
 
         private void AddSecondarySkills()
@@ -383,23 +325,24 @@ namespace FishMod.Survivors.Fish
         {
             Skills.CreateGenericSkillWithSkillFamily(bodyPrefab, SkillSlot.Special);
 
-            //a basic skill. some fields are omitted and will just have default values
             SkillDef specialSkillDef1 = Skills.CreateSkillDef(new SkillDefInfo
             {
-                skillName = "HenryBomb",
-                skillNameToken = FISH_PREFIX + "SPECIAL_BOMB_NAME",
-                skillDescriptionToken = FISH_PREFIX + "SPECIAL_BOMB_DESCRIPTION",
+                skillName = "FishSwap",
+                skillNameToken = FISH_PREFIX + "SWAP_NAME",
+                skillDescriptionToken = FISH_PREFIX + "SWAP_DESCRIPTION",
                 skillIcon = assetBundle.LoadAsset<Sprite>("texSpecialIcon"),
 
-                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.ThrowBomb)),
+                activationState = new SerializableEntityStateType(typeof(SwapWeapons)),
                 //setting this to the "weapon2" EntityStateMachine allows us to cast this skill at the same time primary, which is set to the "weapon" EntityStateMachine
-                activationStateMachineName = "Weapon2", interruptPriority = EntityStates.InterruptPriority.Skill,
+                activationStateMachineName = "Weapon",
+                interruptPriority = InterruptPriority.Skill,
 
-                baseMaxStock = 1,
-                baseRechargeInterval = 10f,
+                stockToConsume = 0,
+                canceledFromSprinting = false,
+                cancelSprintingOnActivation = false,
 
-                isCombatSkill = true,
-                mustKeyPress = false,
+                isCombatSkill = false,
+                mustKeyPress = true,
             });
 
             Skills.AddSpecialSkills(bodyPrefab, specialSkillDef1);
@@ -491,11 +434,61 @@ namespace FishMod.Survivors.Fish
 
             //how to load a master set up in unity, can be an empty gameobject with just AISkillDriver components
             //assetBundle.LoadMaster(bodyPrefab, masterName);
+
+        }
+
+        private void InitializeWeapons()
+        {
+            new Revolver().Init();
+            new Machinegun().Init();
         }
 
         private void AddHooks()
         {
             R2API.RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
+            GlobalEventManager.onCharacterDeathGlobal += GlobalEventManager_onCharacterDeathGlobal;
+        }
+
+        private void GlobalEventManager_onCharacterDeathGlobal(DamageReport report)
+        {
+            if (!NetworkServer.active)
+                return;
+
+            // victim exists and had a master
+            bool validVictim = 
+                report.victimBody != null && 
+                report.victimMaster != null;
+
+            // killer must be fish. needs expanded if we ever want more NT survivors
+            bool killedByFish = 
+                report.attackerBodyIndex == BodyCatalog.FindBodyIndex(instance.bodyPrefab);
+
+            if (validVictim && killedByFish)
+            {
+                Debug.Log("FishSurvivor.GlobalEventManager_onCharacterDeathGlobal : Fish player killed " + report.victimBody.GetDisplayName());
+
+                CharacterMaster fishMaster = report.attackerMaster;
+
+                // elites, bosses, and bodies larger than human can drop weapons by default
+                bool eligibleWeaponDrop = 
+                    report.victimIsElite || 
+                    report.victimIsBoss || 
+                    report.victimBody.hullClassification != HullClassification.Human;
+
+                if (eligibleWeaponDrop && Util.CheckRoll(8f, fishMaster))
+                {
+                    PickupIndex pickupIndex = PickupCatalog.FindPickupIndex(Modules.Weapons.Guns.Revolver.instance.itemDef.itemIndex);
+
+                    Debug.Log("FishSurvivor.GlobalEventManager_onCharacterDeathGlobal : Attempting to create pickup of type " + PickupCatalog.GetPickupDef(pickupIndex).nameToken);
+
+                    CreatePickupInfo pickupInfo = new CreatePickupInfo
+                    {
+                        pickupIndex = pickupIndex
+                    };
+
+                    PickupDropletController.CreatePickupDroplet(pickupInfo, report.victimBody.corePosition, Vector3.up);
+                }
+            }
         }
 
         private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, R2API.RecalculateStatsAPI.StatHookEventArgs args)

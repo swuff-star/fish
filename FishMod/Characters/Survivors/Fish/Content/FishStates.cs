@@ -13,8 +13,12 @@ namespace FishMod.Survivors.Fish
             Modules.Content.AddEntityState(typeof(Roll));
             Modules.Content.AddEntityState(typeof(ThrowBomb));
 
+            // base states
+            Modules.Content.AddEntityState(typeof(SwapWeapons));
+
             // gun states
             Modules.Content.AddEntityState(typeof(FireRevolver));
+            Modules.Content.AddEntityState(typeof(FireMachinegun));
         }
     }
 }

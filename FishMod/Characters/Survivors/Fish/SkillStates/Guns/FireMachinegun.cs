@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace EntityStates.Fish.Guns
 {
-    public class FireMachinegun: BaseSkillState
+    public class FireMachinegun : BaseFishState
     {
         public static GameObject muzzleEffectPrefab = Commando.CommandoWeapon.FirePistol2.muzzleEffectPrefab;
         public static GameObject hitEffectPrefab = Commando.CommandoWeapon.FirePistol2.hitEffectPrefab;
@@ -102,6 +102,8 @@ namespace EntityStates.Fish.Guns
                 bulletAttack.Fire();
             }
             characterBody.AddSpreadBloom(spreadBloomValue);
+
+            if (weaponController != null) weaponController.ConsumeAmmo();
         }
 
         public override InterruptPriority GetMinimumInterruptPriority()

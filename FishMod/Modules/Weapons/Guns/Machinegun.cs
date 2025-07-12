@@ -6,31 +6,31 @@ using UnityEngine;
 
 namespace FishMod.Modules.Weapons.Guns
 {
-    public class Revolver : BaseWeapon<Revolver>
+    public class Machinegun : BaseWeapon<Machinegun>
     {
-        public override string weaponNameToken => "Revolver";
-        public override string weaponName => "Revolver";
-        public override string weaponDesc => "Basic pistol. Fires every 0.2s";
-        public override string iconName => "texIconRevolver";
+        public override string weaponNameToken => "Machinegun";
+        public override string weaponName => "Machinegun";
+        public override string weaponDesc => "Basic machine gun. Fires every 0.2s. Full auto";
+        public override string iconName => "texIconMachinegun";
         public override GameObject crosshairPrefab => null;
         public override int magSize => 7;
         public override float magPickupMultiplier => 1;
         public override int pickupAmmo => 32;
-        public override float reloadDuration => 0.2f;
+        public override float reloadDuration => 0.17f;
         public override string ammoName => "Bullets";
-        public override GameObject modelPrefab => FishSurvivor.instance.assetBundle.LoadAsset<GameObject>("mdlRevolver");
-        public override FishWeaponDef.AnimationSet animationSet => FishWeaponDef.AnimationSet.Pistol;
+        public override GameObject modelPrefab => FishSurvivor.instance.assetBundle.LoadAsset<GameObject>("mdlMachinegun");
+        public override FishWeaponDef.AnimationSet animationSet => FishWeaponDef.AnimationSet.SMG;
         public override FishWeaponDef.AmmoType ammoType => FishWeaponDef.AmmoType.Bullet;
         public override bool storedOnBack => false;
 
         public override SkillDef primarySkillDef => Skills.CreateSkillDef<SkillDef>(new SkillDefInfo
             {
-                skillName = "FishRevolver",
-                skillNameToken = FishSurvivor.FISH_PREFIX + "REVOLVER_NAME",
-                skillDescriptionToken = FishSurvivor.FISH_PREFIX + "REVOLVER_DESCRIPTION",
+                skillName = "FishMachinegun",
+                skillNameToken = FishSurvivor.FISH_PREFIX + "MACHINEGUN_NAME",
+                skillDescriptionToken = FishSurvivor.FISH_PREFIX + "MACHINEGUN_DESCRIPTION",
                 skillIcon = FishSurvivor.instance.assetBundle.LoadAsset<Sprite>(iconName),
 
-                activationState = new SerializableEntityStateType(typeof(EntityStates.Fish.Guns.FireRevolver)),
+                activationState = new SerializableEntityStateType(typeof(EntityStates.Fish.Guns.FireMachinegun)),
                 activationStateMachineName = "Weapon",
                 interruptPriority = InterruptPriority.Any,
 
@@ -44,14 +44,13 @@ namespace FishMod.Modules.Weapons.Guns
                 resetCooldownTimerOnUse = false,
                 fullRestockOnAssign = false,
                 dontAllowPastMaxStocks = false,
-                mustKeyPress = true,
+                mustKeyPress = false,
                 beginSkillCooldownOnSkillEnd = true,
 
                 isCombatSkill = true,
                 canceledFromSprinting = false,
                 cancelSprintingOnActivation = true,
                 forceSprintDuringState = false,
-
             });
 
         public override void Init()

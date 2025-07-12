@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2444375301
+CRC: 1888377809
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 0ece6031f7b6772d724f4c5ce09eddf8
+    Hash: 003b02ec7100db4c568f624c8034bd43
   TypeTreeHash:
     serializedVersion: 2
     Hash: 01ab68918a4dd982bcc4a740d1c90321
@@ -69,6 +69,7 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: Assembly-CSharp
   ClassName: ChildLocator/NameTransformPair
 Assets:
+- Assets/FishAssets/FishBundle/Icons/texIconMachinegun.png
 - Assets/FishAssets/FishBundle/Animation/clips/DefaultPose.anim
 - Assets/FishAssets/FishBundle/Icons/texMasteryAchievement.png
 - Assets/FishAssets/FishBundle/Materials/matRebellion.mat
@@ -159,6 +160,7 @@ Assets:
 - Assets/FishAssets/FishBundle/VFX/Materials/matRipple.mat
 - Assets/FishAssets/FishBundle/Materials/matHenryNeo.mat
 - Assets/FishAssets/FishBundle/Animation/maskAimPitch.mask
+- Assets/FishAssets/FishBundle/Icons/texIconRevolver.png
 - Assets/FishAssets/FishBundle/Mesh/meshDante.mesh
 - Assets/FishAssets/FishBundle/Animation/clips/RestIdle.anim
 - Assets/FishAssets/FishBundle/VFX/Materials/matFistSwing.mat

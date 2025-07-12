@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace EntityStates.Fish.Guns
 {
-    public class FireRevolver : BaseSkillState
+    public class FireRevolver : BaseFishState
     {
         public static GameObject muzzleEffectPrefab = Commando.CommandoWeapon.FirePistol2.muzzleEffectPrefab;
         public static GameObject hitEffectPrefab = Commando.CommandoWeapon.FirePistol2.hitEffectPrefab;
@@ -46,7 +46,7 @@ namespace EntityStates.Fish.Guns
 
             StartAimMode(aimRay, duration * 1.5f);
 
-            PlayAnimation("LeftArm, Override", "ShootGun", "ShootGun.playbackRate", 1.8f);
+            PlayAnimation("LeftArm, Override", "ShootGun", "ShootGun.playbackRate", duration);
         }
 
         public override void FixedUpdate()
@@ -102,6 +102,8 @@ namespace EntityStates.Fish.Guns
                 bulletAttack.Fire();
             }
             characterBody.AddSpreadBloom(spreadBloomValue);
+
+            if (weaponController != null) weaponController.ConsumeAmmo();
         }
 
         public override InterruptPriority GetMinimumInterruptPriority()
