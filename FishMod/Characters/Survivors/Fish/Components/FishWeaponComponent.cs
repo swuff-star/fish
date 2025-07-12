@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace HenryMod.Survivors.Fish.Components
+namespace FishMod.Survivors.Fish.Components
 {
     internal class FishWeaponComponent : MonoBehaviour
     {

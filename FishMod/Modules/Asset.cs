@@ -9,7 +9,7 @@ using RoR2.UI;
 using RoR2.Projectile;
 using Path = System.IO.Path;
 
-namespace HenryMod.Modules
+namespace FishMod.Modules
 {
     internal static class Asset
     {

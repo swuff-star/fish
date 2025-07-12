@@ -1,5 +1,5 @@
-﻿using HenryMod.Modules;
-using HenryMod.Modules.Characters;
+﻿using FishMod.Modules;
+using FishMod.Modules.Characters;
 using RoR2;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +11,7 @@ using UnityEngine;
                     {localScale})
 */
 
-namespace HenryMod.Survivors.Fish
+namespace FishMod.Survivors.Fish
 {
     public class FishItemDisplays : ItemDisplaysBase
     {

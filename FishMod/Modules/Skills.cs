@@ -3,10 +3,10 @@ using RoR2;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
-using HenryMod;
+using FishMod;
 using UnityEngine;
 
-namespace HenryMod.Modules
+namespace FishMod.Modules
 {
     internal static class Skills
     {
@@ -185,11 +185,19 @@ namespace HenryMod.Modules
 
             skillDef.keywordTokens = skillDefInfo.keywordTokens;
 
-            HenryMod.Modules.Content.AddSkillDef(skillDef);
+            FishMod.Modules.Content.AddSkillDef(skillDef);
 
 
             return skillDef;
         }
+
+        internal static SkillDef CreatePrimarySkillDef(SerializableEntityStateType state, string stateMachine, string skillNameToken, string skillDescription, Sprite skillIcon, bool agile)
+        {
+            SkillDefInfo info = new SkillDefInfo(skillNameToken, skillNameToken, skillDescription, skillIcon, state, stateMachine, agile);
+            info.requiredStock = 1;
+
+            return CreateSkillDef(info);
+        }      
         #endregion skilldefs
     }
 

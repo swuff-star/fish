@@ -1,7 +1,7 @@
 ﻿using RoR2;
-using HenryMod.Modules.Achievements;
+using FishMod.Modules.Achievements;
 
-namespace HenryMod.Survivors.Fish.Achievements
+namespace FishMod.Survivors.Fish.Achievements
 {
     //automatically creates language tokens "ACHIEVMENT_{identifier.ToUpper()}_NAME" and "ACHIEVMENT_{identifier.ToUpper()}_DESCRIPTION" 
     [RegisterAchievement(identifier, unlockableIdentifier, null, 10, null)]

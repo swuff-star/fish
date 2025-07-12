@@ -1,16 +1,17 @@
 ﻿using BepInEx;
-using HenryMod.Survivors.Fish;
+using FishMod.Survivors.Fish;
 using R2API.Utils;
 using RoR2;
 using System.Collections.Generic;
 using System.Security;
 using System.Security.Permissions;
+using UnityEngine;
 
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 
 //rename this namespace
-namespace HenryMod
+namespace FishMod
 {
     //[BepInDependency("com.rune580.riskofoptions", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]

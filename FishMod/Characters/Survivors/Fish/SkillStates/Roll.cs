@@ -1,10 +1,10 @@
 ﻿using EntityStates;
-using HenryMod.Survivors.Fish;
+using FishMod.Survivors.Fish;
 using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace HenryMod.Survivors.Fish.SkillStates
+namespace FishMod.Survivors.Fish.SkillStates
 {
     public class Roll : BaseSkillState
     {

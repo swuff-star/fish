@@ -1,10 +1,10 @@
 ﻿using EntityStates;
-using HenryMod.Survivors.Fish;
+using FishMod.Survivors.Fish;
 using RoR2;
 using RoR2.Projectile;
 using UnityEngine;
 
-namespace HenryMod.Survivors.Fish.SkillStates
+namespace FishMod.Survivors.Fish.SkillStates
 {
     public class ThrowBomb : GenericProjectileBaseState
     {

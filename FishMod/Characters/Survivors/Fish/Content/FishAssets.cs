@@ -1,10 +1,10 @@
 ﻿using RoR2;
 using UnityEngine;
-using HenryMod.Modules;
+using FishMod.Modules;
 using System;
 using RoR2.Projectile;
 
-namespace HenryMod.Survivors.Fish
+namespace FishMod.Survivors.Fish
 {
     public static class FishAssets
     {

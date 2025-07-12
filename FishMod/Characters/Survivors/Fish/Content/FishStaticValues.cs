@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HenryMod.Survivors.Fish
+namespace FishMod.Survivors.Fish
 {
     public static class FishStaticValues
     {

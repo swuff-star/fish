@@ -1,7 +1,7 @@
 ﻿using RoR2;
 using UnityEngine;
 
-namespace HenryMod.Survivors.Fish
+namespace FishMod.Survivors.Fish
 {
     public static class FishBuffs
     {

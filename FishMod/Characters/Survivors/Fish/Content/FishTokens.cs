@@ -1,8 +1,8 @@
 ﻿using System;
-using HenryMod.Modules;
-using HenryMod.Survivors.Fish.Achievements;
+using FishMod.Modules;
+using FishMod.Survivors.Fish.Achievements;
 
-namespace HenryMod.Survivors.Fish
+namespace FishMod.Survivors.Fish
 {
     public static class FishTokens
     {

@@ -1,15 +1,17 @@
 ﻿using BepInEx.Configuration;
-using HenryMod.Modules;
-using HenryMod.Modules.Characters;
-using HenryMod.Survivors.Fish.Components;
-using HenryMod.Survivors.Fish.SkillStates;
+using EntityStates;
+using FishMod.Modules;
+using FishMod.Modules.Characters;
+using FishMod.Survivors.Fish.Components;
+using FishMod.Survivors.Fish.SkillStates;
 using RoR2;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static RoR2.TeleporterInteraction;
 
-namespace HenryMod.Survivors.Fish
+namespace FishMod.Survivors.Fish
 {
     public class FishSurvivor : SurvivorBase<FishSurvivor>
     {
@@ -233,6 +235,70 @@ namespace HenryMod.Survivors.Fish
             primarySkillDef1.stepGraceDuration = 0.5f;
 
             Skills.AddPrimarySkills(bodyPrefab, primarySkillDef1);
+
+            SkillDef revolverDef = Skills.CreateSkillDef<SkillDef>(new SkillDefInfo
+            {
+                skillName = "FishRevolver",
+                skillNameToken = FISH_PREFIX + "REVOLVER_NAME",
+                skillDescriptionToken = FISH_PREFIX + "REVOLVER_DESCRIPTION",
+                skillIcon = assetBundle.LoadAsset<Sprite>("texSecondaryIcon"),
+
+                activationState = new SerializableEntityStateType(typeof(EntityStates.Fish.Guns.FireRevolver)),
+                activationStateMachineName = "Weapon",
+                interruptPriority = InterruptPriority.Skill,
+
+                baseRechargeInterval = 0f,
+                baseMaxStock = 1,
+
+                rechargeStock = 0,
+                requiredStock = 0,
+                stockToConsume = 0,
+
+                resetCooldownTimerOnUse = false,
+                fullRestockOnAssign = false,
+                dontAllowPastMaxStocks = false,
+                mustKeyPress = true,
+                beginSkillCooldownOnSkillEnd = false,
+
+                isCombatSkill = true,
+                canceledFromSprinting = false,
+                cancelSprintingOnActivation = true,
+                forceSprintDuringState = false,
+
+            });
+            Skills.AddPrimarySkills(bodyPrefab, revolverDef);
+
+            SkillDef machineGunDef = Skills.CreateSkillDef<SkillDef>(new SkillDefInfo
+            {
+                skillName = "FishMachineGun",
+                skillNameToken = FISH_PREFIX + "MACHINEGUN_NAME",
+                skillDescriptionToken = FISH_PREFIX + "MACHINEGUN_DESCRIPTION",
+                skillIcon = assetBundle.LoadAsset<Sprite>("texSecondaryIcon"),
+
+                activationState = new SerializableEntityStateType(typeof(EntityStates.Fish.Guns.FireMachinegun)),
+                activationStateMachineName = "Weapon",
+                interruptPriority = InterruptPriority.Skill,
+
+                baseRechargeInterval = 0f,
+                baseMaxStock = 1,
+
+                rechargeStock = 0,
+                requiredStock = 0,
+                stockToConsume = 0,
+
+                resetCooldownTimerOnUse = false,
+                fullRestockOnAssign = false,
+                dontAllowPastMaxStocks = false,
+                mustKeyPress = false,
+                beginSkillCooldownOnSkillEnd = false,
+
+                isCombatSkill = true,
+                canceledFromSprinting = false,
+                cancelSprintingOnActivation = true,
+                forceSprintDuringState = false,
+
+            });
+            Skills.AddPrimarySkills(bodyPrefab, machineGunDef);
         }
 
         private void AddSecondarySkills()

@@ -1,7 +1,7 @@
 ﻿using BepInEx.Configuration;
-using HenryMod.Modules;
+using FishMod.Modules;
 
-namespace HenryMod.Survivors.Fish
+namespace FishMod.Survivors.Fish
 {
     public static class FishConfig
     {

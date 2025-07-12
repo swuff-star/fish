@@ -1,4 +1,4 @@
-﻿namespace HenryMod.Modules
+﻿namespace FishMod.Modules
 {
     internal static class Tokens
     {

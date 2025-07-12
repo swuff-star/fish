@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HenryMod.Modules {
+namespace FishMod.Modules {
     internal class ContentPacks : IContentPackProvider
     {
         internal ContentPack contentPack = new ContentPack();
@@ -14,6 +14,7 @@ namespace HenryMod.Modules {
         public static List<GameObject> bodyPrefabs = new List<GameObject>();
         public static List<GameObject> masterPrefabs = new List<GameObject>();
         public static List<GameObject> projectilePrefabs = new List<GameObject>();
+        public static List<GameObject> pickupPrefabs = new List<GameObject>();
 
         public static List<SurvivorDef> survivorDefs = new List<SurvivorDef>();
         public static List<UnlockableDef> unlockableDefs = new List<UnlockableDef>();
@@ -24,6 +25,8 @@ namespace HenryMod.Modules {
 
         public static List<BuffDef> buffDefs = new List<BuffDef>();
         public static List<EffectDef> effectDefs = new List<EffectDef>();
+
+        public static List<ItemDef> itemDefs = new List<ItemDef>();
 
         public static List<NetworkSoundEventDef> networkSoundEventDefs = new List<NetworkSoundEventDef>();
 
@@ -54,6 +57,8 @@ namespace HenryMod.Modules {
 
             contentPack.buffDefs.Add(buffDefs.ToArray());
             contentPack.effectDefs.Add(effectDefs.ToArray());
+
+            contentPack.itemDefs.Add(itemDefs.ToArray());
 
             contentPack.networkSoundEventDefs.Add(networkSoundEventDefs.ToArray());
 

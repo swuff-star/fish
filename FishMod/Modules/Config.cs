@@ -2,7 +2,7 @@
 using BepInEx.Configuration;
 using UnityEngine;
 
-namespace HenryMod.Modules
+namespace FishMod.Modules
 {
     public static class Config
     {

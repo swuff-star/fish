@@ -1,9 +1,9 @@
 ﻿using EntityStates;
-using HenryMod.Survivors.Fish;
+using FishMod.Survivors.Fish;
 using RoR2;
 using UnityEngine;
 
-namespace HenryMod.Survivors.Fish.SkillStates
+namespace FishMod.Survivors.Fish.SkillStates
 {
     public class Shoot : BaseSkillState
     {

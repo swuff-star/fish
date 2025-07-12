@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HenryMod.Modules
+namespace FishMod.Modules
 {
     internal static class ItemDisplays
     {

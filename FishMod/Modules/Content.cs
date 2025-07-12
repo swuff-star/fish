@@ -3,7 +3,7 @@ using RoR2.Skills;
 using System;
 using UnityEngine;
 
-namespace HenryMod.Modules
+namespace FishMod.Modules
 {
     //consolidate contentaddition here in case something breaks and/or want to move to r2api
     internal class Content
@@ -111,6 +111,11 @@ namespace HenryMod.Modules
             AddEffectDef(effectDef);
 
             return effectDef;
+        }
+
+        internal static void AddItemDef(ItemDef itemDef)
+        {
+            ContentPacks.itemDefs.Add(itemDef);
         }
 
         internal static void AddNetworkSoundEventDef(NetworkSoundEventDef networkSoundEventDef)
