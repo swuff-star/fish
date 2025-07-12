@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 3428442012
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: fishassetbundle
+      Dependencies: {}

@@ -1,0 +1,215 @@
+ManifestFileVersion: 0
+CRC: 2444375301
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 0ece6031f7b6772d724f4c5ce09eddf8
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 01ab68918a4dd982bcc4a740d1c90321
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 54
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 108
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 751bd37d2e55f5f448dbb0d97812d9ba, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 261c50d8a80898e4ebf2e8e415ea6766, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 68ee60b5bcd2668489cac0473619dffe, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 9a68da65c907acb4eb4dbcd042f172e7, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 135
+  Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+- Class: 144
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 319
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Assembly-CSharp
+  ClassName: ChildLocator/NameTransformPair
+Assets:
+- Assets/FishAssets/FishBundle/Animation/clips/DefaultPose.anim
+- Assets/FishAssets/FishBundle/Icons/texMasteryAchievement.png
+- Assets/FishAssets/FishBundle/Materials/matRebellion.mat
+- Assets/FishAssets/FishBundle/Mesh/meshNeoCoat.mesh
+- Assets/FishAssets/FishBundle/Animation/clips/Slash2.anim
+- Assets/FishAssets/FishBundle/Mesh/meshVergil.mesh
+- Assets/FishAssets/FishBundle/Animation/clips/Descend.anim
+- Assets/FishAssets/FishBundle/Icons/texHenryAchievement.png
+- Assets/FishAssets/FishBundle/Icons/texSpecialIcon.png
+- Assets/FishAssets/FishBundle/VFX/HenryFistSwingEffect.prefab
+- Assets/FishAssets/FishBundle/Animation/clips/Idle.anim
+- Assets/FishAssets/FishBundle/Icons/texUtilityIcon.png
+- Assets/FishAssets/FishBundle/Animation/clips/SprintR.anim
+- Assets/FishAssets/FishBundle/Animation/animHenryMenu.controller
+- Assets/FishAssets/FishBundle/Animation/maskImpact.mask
+- Assets/FishAssets/FishBundle/Animation/clips/ShootGun.anim
+- Assets/FishAssets/FishBundle/Animation/clips/WalkB.anim
+- Assets/FishAssets/FishBundle/Icons/texStingerIcon.png
+- Assets/FishAssets/FishBundle/Icons/texHenryIcon.png
+- Assets/FishAssets/FishBundle/Mesh/meshHenryAlt.mesh
+- Assets/FishAssets/FishBundle/Mesh/meshRebellion.mesh
+- Assets/FishAssets/FishBundle/Textures/texBazooka.png
+- Assets/FishAssets/FishBundle/Textures/texHenry.png
+- Assets/FishAssets/FishBundle/VFX/Materials/matDust.mat
+- Assets/FishAssets/FishBundle/Animation/clips/IdleAdditive.anim
+- Assets/FishAssets/FishBundle/HenryBombGhost.prefab
+- Assets/FishAssets/FishBundle/Animation/clips/WalkR.anim
+- Assets/FishAssets/FishBundle/Materials/matBoxingGlove.mat
+- Assets/FishAssets/FishBundle/VFX/Mesh/meshBoxingGlove.mesh
+- Assets/FishAssets/FishBundle/Textures/texShotgun.png
+- Assets/FishAssets/FishBundle/VFX/Textures/texSmoke.png
+- Assets/FishAssets/FishBundle/VFX/Materials/matPunchEffect.mat
+- Assets/FishAssets/FishBundle/Icons/texBazookaOutIcon.png
+- Assets/FishAssets/FishBundle/VFX/Textures/texSlash.png
+- Assets/FishAssets/FishBundle/Mesh/MeshHenryGun.mesh
+- Assets/FishAssets/FishBundle/Materials/matDante.mat
+- Assets/FishAssets/FishBundle/Textures/texHenryJediEmission.png
+- Assets/FishAssets/FishBundle/VFX/Mesh/meshSwing.asset
+- Assets/FishAssets/FishBundle/VFX/BombExplosionEffect.prefab
+- Assets/FishAssets/FishBundle/VFX/HenrySwordSwingEffect.prefab
+- Assets/FishAssets/FishBundle/Animation/clips/RestIdleIn.anim
+- Assets/FishAssets/FishBundle/Icons/texPistolIcon.png
+- Assets/FishAssets/FishBundle/Icons/texPrimaryIcon.png
+- Assets/FishAssets/FishBundle/VFX/Materials/matSwingEffect.mat
+- Assets/FishAssets/FishBundle/Mesh/meshHenry.mesh
+- Assets/FishAssets/FishBundle/Icons/texPassiveIcon.png
+- Assets/FishAssets/FishBundle/Materials/matHenryAlt.mat
+- Assets/FishAssets/FishBundle/Mesh/meshDanteCoat.mesh
+- Assets/FishAssets/FishBundle/VFX/Textures/texDust.png
+- Assets/FishAssets/FishBundle/Animation/clips/DescendFast.anim
+- Assets/FishAssets/FishBundle/FishDisplay.prefab
+- Assets/FishAssets/FishBundle/VFX/Materials/matFire.mat
+- Assets/FishAssets/FishBundle/VFX/HenryBazookaMuzzleFlash.prefab
+- Assets/FishAssets/FishBundle/VFX/Materials/matPunchImpact.mat
+- Assets/FishAssets/FishBundle/VFX/Materials/matTrail.mat
+- Assets/FishAssets/FishBundle/Materials/matHenryJedi.mat
+- Assets/FishAssets/FishBundle/Textures/texHenryDanteEmission.png
+- Assets/FishAssets/FishBundle/Textures/texHenryVergil.png
+- Assets/FishAssets/FishBundle/VFX/Textures/texLightning.tif
+- Assets/FishAssets/FishBundle/Animation/clips/Roll.anim
+- Assets/FishAssets/FishBundle/Materials/matShotgun.mat
+- Assets/FishAssets/FishBundle/VFX/Materials/matPunchImpactShadow.mat
+- Assets/FishAssets/FishBundle/VFX/FistBarrageEffect.prefab
+- Assets/FishAssets/FishBundle/Icons/texShotgunIcon.png
+- Assets/FishAssets/FishBundle/Animation/clips/IdleIn.anim
+- Assets/FishAssets/FishBundle/Icons/texBoxingGlovesIcon.png
+- Assets/FishAssets/FishBundle/VFX/Textures/texFire.tga
+- Assets/FishAssets/FishBundle/Mesh/meshYamato.mesh
+- Assets/FishAssets/FishBundle/Animation/clips/AimPitch.anim
+- Assets/FishAssets/FishBundle/VFX/Materials/matEmbers.mat
+- Assets/FishAssets/FishBundle/VFX/Materials/matSlash.mat
+- Assets/FishAssets/FishBundle/Animation/clips/Slash1.anim
+- Assets/FishAssets/FishBundle/Materials/matBazookaRocket.mat
+- Assets/FishAssets/FishBundle/Animation/clips/MenuIdle.anim
+- Assets/FishAssets/FishBundle/VFX/Textures/texFistSwing.png
+- Assets/FishAssets/FishBundle/Icons/texSecondaryIcon.png
+- Assets/FishAssets/FishBundle/VFX/Textures/texSwingEffect.png
+- Assets/FishAssets/FishBundle/Animation/maskAimYaw.mask
+- Assets/FishAssets/FishBundle/Animation/maskAimBazooka.mask
+- Assets/FishAssets/FishBundle/Icons/texBazookaIconScepter.png
+- Assets/FishAssets/FishBundle/VFX/Textures/texPunchImpact.png
+- Assets/FishAssets/FishBundle/mdlFish.prefab
+- Assets/FishAssets/FishBundle/Animation/clips/Jump.anim
+- Assets/FishAssets/FishBundle/Mesh/meshPistol.mesh
+- Assets/FishAssets/FishBundle/Icons/texUziIcon.png
+- Assets/FishAssets/FishBundle/Animation/maskLeftArm.mask
+- Assets/FishAssets/FishBundle/Animation/clips/SprintF.anim
+- Assets/FishAssets/FishBundle/VFX/Materials/matRipple.mat
+- Assets/FishAssets/FishBundle/Materials/matHenryNeo.mat
+- Assets/FishAssets/FishBundle/Animation/maskAimPitch.mask
+- Assets/FishAssets/FishBundle/Mesh/meshDante.mesh
+- Assets/FishAssets/FishBundle/Animation/clips/RestIdle.anim
+- Assets/FishAssets/FishBundle/VFX/Materials/matFistSwing.mat
+- Assets/FishAssets/FishBundle/Materials/matVergil.mat
+- Assets/FishAssets/FishBundle/VFX/HenryDustEffect.prefab
+- Assets/FishAssets/FishBundle/Materials/matHenry.mat
+- Assets/FishAssets/FishBundle/VFX/Mesh/meshPunchShockwave.mesh
+- Assets/FishAssets/FishBundle/Animation/clips/SprintL.anim
+- Assets/FishAssets/FishBundle/VFX/Materials/matAnimeShapes.mat
+- Assets/FishAssets/FishBundle/FishMonsterMaster.prefab
+- Assets/FishAssets/FishBundle/HenryBazookaRocketGhost.prefab
+- Assets/FishAssets/FishBundle/Animation/animHenry.controller
+- Assets/FishAssets/FishBundle/Mesh/meshUzi.mesh
+- Assets/FishAssets/FishBundle/Animation/clips/ThrowBomb.anim
+- Assets/FishAssets/FishBundle/VFX/Textures/texEmbers.png
+- Assets/FishAssets/FishBundle/Materials/matBazooka.mat
+- Assets/FishAssets/FishBundle/Textures/texBoxingGlove.png
+- Assets/FishAssets/FishBundle/VFX/Materials/matHitSparkPunch.mat
+- Assets/FishAssets/FishBundle/Animation/maskGesture.mask
+- Assets/FishAssets/FishBundle/Animation/clips/MenuIdleIn.anim
+- Assets/FishAssets/FishBundle/VFX/Textures/texHenrySwing2.png
+- Assets/FishAssets/FishBundle/Materials/matRoy.mat
+- Assets/FishAssets/FishBundle/Icons/texMainSkin.png
+- Assets/FishAssets/FishBundle/VFX/HenryBazookaExplosionEffect.prefab
+- Assets/FishAssets/FishBundle/Icons/texGrandMasteryAchievement.png
+- Assets/FishAssets/FishBundle/Textures/texHenryNeo.png
+- Assets/FishAssets/FishBundle/Icons/texVergilAchievement.png
+- Assets/FishAssets/FishBundle/VFX/Textures/texHitSpark.png
+- Assets/FishAssets/FishBundle/Animation/maskBandana.mask
+- Assets/FishAssets/FishBundle/VFX/Textures/texRipple.png
+- Assets/FishAssets/FishBundle/Animation/clips/WalkL.anim
+- Assets/FishAssets/FishBundle/VFX/Materials/matSwingShadow.mat
+- Assets/FishAssets/FishBundle/Animation/clips/Ascend.anim
+- Assets/FishAssets/FishBundle/VFX/Materials/matHitSpark.mat
+- Assets/FishAssets/FishBundle/Mesh/meshHenryNeo.mesh
+- Assets/FishAssets/FishBundle/Mesh/meshHenrySwordAlt.mesh
+- Assets/FishAssets/FishBundle/VFX/Materials/matHenrySwing2.mat
+- Assets/FishAssets/FishBundle/Animation/clips/LightImpact.anim
+- Assets/FishAssets/FishBundle/VFX/Materials/matSmoke.mat
+- Assets/FishAssets/FishBundle/Animation/clips/WalkF.anim
+- Assets/FishAssets/FishBundle/Textures/texHenryAlt.png
+- Assets/FishAssets/FishBundle/Textures/texHenryDante.png
+- Assets/FishAssets/FishBundle/Textures/texHenryJedi.png
+- Assets/FishAssets/FishBundle/Icons/texScepterSpecialIcon.png
+- Assets/FishAssets/FishBundle/VFX/Textures/texPunchImpactShadow.png
+- Assets/FishAssets/FishBundle/Icons/texBazookaFireIcon.png
+- Assets/FishAssets/FishBundle/Mesh/meshVergilCoat.mesh
+- Assets/FishAssets/FishBundle/VFX/ImpactHenrySlash.prefab
+- Assets/FishAssets/FishBundle/Icons/texBazookaIcon.png
+- Assets/FishAssets/FishBundle/VFX/ImpactHenryPunch.prefab
+- Assets/FishAssets/FishBundle/Animation/clips/AimYaw.anim
+- Assets/FishAssets/FishBundle/Mesh/meshHenrySword.mesh
+- Assets/FishAssets/FishBundle/Icons/texDanteAchievement.png
+Dependencies: []
