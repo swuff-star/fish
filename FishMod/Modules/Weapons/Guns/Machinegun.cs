@@ -10,7 +10,7 @@ namespace FishMod.Modules.Weapons.Guns
     {
         public override string weaponNameToken => "Machinegun";
         public override string weaponName => "Machinegun";
-        public override string weaponDesc => "Basic machine gun. Fires every 0.2s. Full auto";
+        public override string weaponDesc => "Basic machinegun. Fires every 0.17s. Full auto.";
         public override string iconName => "texIconMachinegun";
         public override GameObject crosshairPrefab => null;
         public override int magSize => 7;

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
+using static FishMod.Modules.Weapons.FishWeaponDef;
+using FishMod.Survivors.Fish;
 
 namespace FishMod.Characters.Survivors.Fish.Components
 {
@@ -129,9 +131,9 @@ namespace FishMod.Characters.Survivors.Fish.Components
 
             Debug.Log("FishWeaponController.EquipWeapon : Current weapon ammo type should be " + weaponDef.ammoType + ", and is currently " + weaponTracker.activeAmmo);
 
-            Debug.Log("FishWeaponController.EquipWeapon : Equipping " + weaponDef.name + " with " + weaponTracker.GetCurrentAmmoTypeRemaining() + "/" + weaponTracker.GetCurrentAmmoTypeMax() + " of type " + weaponTracker.activeAmmo);
+            Debug.Log("FishWeaponController.EquipWeapon : Equipping " + weaponDef.name + " with " + weaponTracker.GetCurrentAmmoTypeRemaining() + "/" + weaponTracker.GetAmmoTypeMax(weaponDef.ammoType) + " of type " + weaponTracker.activeAmmo);
 
-            skillLocator.primary.maxStock = weaponTracker.GetCurrentAmmoTypeMax();
+            skillLocator.primary.maxStock = weaponTracker.GetAmmoTypeMax(weaponDef.ammoType);
             skillLocator.primary.stock = weaponTracker.GetCurrentAmmoTypeRemaining();
             if (skillLocator.primary.skillDef is FishWeaponSkillDef fwsd2) fwsd2.pseudoCooldownRemaining = weaponTracker.offhandRemainingCooldown;
 
@@ -153,20 +155,158 @@ namespace FishMod.Characters.Survivors.Fish.Components
             EquipWeapon(weaponTracker.equippedIndex);
         }
 
+        public float GetCurrentDropMultiplier()
+        {
+            return weaponTracker.CalculateCurrentDropMultiplier();
+        }
+
+        public bool MaxAmmo()
+        {
+            return weaponTracker.MaxAmmo();
+        }
+
         public void ConsumeAmmo(int amount = 1)
         {
-            Debug.Log("FishWeaponController.ConsumeAmmo : " + weaponDef.name + " firing " + amount + " " + weaponTracker.activeAmmo);
+            // Debug.Log("FishWeaponController.ConsumeAmmo : " + weaponDef.name + " firing " + amount + " " + weaponTracker.activeAmmo);
+            // no cooldowns = infinite ammo >:)
             if (characterBody.HasBuff(RoR2Content.Buffs.NoCooldowns)) return;
 
-            if (currentAmmo <= weaponTracker.GetCurrentAmmoTypeRemaining()) weaponTracker.SpendCurrentAmmo(amount);
+            amount = Mathf.Max(amount, 0);
 
-            currentAmmo -= amount;
-
-            if (currentAmmo <= 0) currentAmmo = 0;
-
-            if (weaponTracker.GetCurrentAmmoTypeRemaining() <= 0) weaponTracker.SetCurrentAmmo(0);
+            weaponTracker.SpendCurrentAmmo(amount);
 
             skillLocator.primary.DeductStock(amount);
+        }
+
+        public void GiveAmmoOfType(int amount = 1, AmmoType type = AmmoType.None)
+        {
+            weaponTracker.GiveAmmo(amount, type);
+        }
+
+        public void GiveAmmoPack()
+        {
+            Debug.Log("FishWeaponController.ApplyAmmoPack : Attempting to apply ammo..");
+
+            // get the currently in-use weapon types
+            AmmoType primaryType = weaponTracker.GetPrimaryAmmoType();
+            AmmoType secondaryType = weaponTracker.GetSecondaryAmmoType();
+
+            Debug.Log("FishWeaponController.ApplyAmmoPack : Primary is " + primaryType + " | Secondary is " + secondaryType);
+            List<AmmoType> activeTypes = new List<AmmoType>();
+
+            // make a list of all weapon types that can get ammo
+            // if a weapon is at full ammo, or a weapon is melee, it'll roll for a weapon type that's independent of the other
+            // so we want a list of ammo types that AREN'T in use-
+            // to do that, we initialize a list of all of them and then subtract later
+            List<AmmoType> otherAmmoTypes = new List<AmmoType>();
+            otherAmmoTypes.Add(AmmoType.Bullet);
+            otherAmmoTypes.Add(AmmoType.Shell);
+            otherAmmoTypes.Add(AmmoType.Explosive);
+            otherAmmoTypes.Add(AmmoType.Bolt);
+            otherAmmoTypes.Add(AmmoType.Laser);
+
+            bool invalidPrimary = false;
+            bool invalidSecondary = false;
+
+            if (primaryType != AmmoType.None && weaponTracker.GetAmmoTypeCount(primaryType) < weaponTracker.GetAmmoTypeMax(primaryType))
+            {
+                // add primary to the list of types in-use
+                activeTypes.Add(primaryType);
+            }
+            else
+            {
+                // primary either uses no ammo, or is full
+                invalidPrimary = true;
+            }
+
+            // remove the primary type from the list of other ammo types
+            if (otherAmmoTypes.Contains(primaryType)) otherAmmoTypes.Remove(primaryType);
+
+            if (secondaryType != AmmoType.None && weaponTracker.GetAmmoTypeCount(secondaryType) < weaponTracker.GetAmmoTypeMax(secondaryType))
+            {
+                // add secondary to the list of types in-use
+                if (activeTypes.Contains(secondaryType) == false)
+                {
+                    activeTypes.Add(secondaryType);
+                }
+            }
+            else
+            {
+                // secondary either uses no ammo, or is full
+                invalidSecondary = true;
+            }
+
+            // remove the secondary type from the list of other ammo types
+            if (otherAmmoTypes.Contains(secondaryType)) otherAmmoTypes.Remove(secondaryType);
+
+            // final type to give ammo for
+            AmmoType chosenType;
+
+            // if both are valid, roll between them exclusively
+            if (invalidPrimary == false && invalidSecondary == false)
+            {
+                chosenType = activeTypes[UnityEngine.Random.Range(0, activeTypes.Count)];
+
+                Debug.Log("FishWeaponController.ApplyAmmoPack : Both ammo types were valid.");
+            }
+
+            // if both are invalid (none/full), roll another ammo type
+            else if (invalidPrimary && invalidSecondary)
+            {
+                chosenType = otherAmmoTypes[UnityEngine.Random.Range(0, otherAmmoTypes.Count)];
+
+                Debug.Log("FishWeaponController.ApplyAmmoPack : Neither ammo types were valid.");
+            }
+
+            // if only one is invalid, 50% chance to give to the valid, and 50% to give a different one instead
+            else
+            {
+                if (UnityEngine.Random.value < 0.5f)
+                {
+                    chosenType = activeTypes[UnityEngine.Random.Range(0, activeTypes.Count)];
+                }
+
+                else
+                {
+                    chosenType = otherAmmoTypes[UnityEngine.Random.Range(0, otherAmmoTypes.Count)];
+                }
+
+                if (invalidPrimary)
+                {
+                    Debug.Log("FishWeaponController.ApplyAmmoPack : Primary ammo type was invalid.");
+                }
+
+                if (invalidSecondary)
+                {
+                    Debug.Log("FishWeaponController.ApplyAmmoPack : Secondary ammo type was invalid.");
+                }
+            }
+
+            Debug.Log("FishWeaponController.ApplyAmmoPack : Selected ammo type is " + chosenType);
+
+            int ammoAmount = weaponTracker.GetAmmoTypePickupAmount(chosenType);
+
+            // fish gets 25% more ammo rounded up
+            // future proofing by making it fish-specific ig
+            if (BodyCatalog.FindBodyPrefab(characterBody) == FishSurvivor.instance.bodyPrefab)
+            {
+                ammoAmount = (int)MathF.Ceiling(1.25f * ammoAmount);
+            }
+
+            if (chosenType == primaryType)
+            {
+                // >
+                skillLocator.primary.DeductStock(-ammoAmount);
+            }
+
+            weaponTracker.GiveAmmo(ammoAmount, chosenType);
+
+            Debug.Log("FishWeaponController.ApplyAmmoPack : End of ApplyAmmoPack. Current ammo is now: ");
+            Debug.Log("FishWeaponController.ApplyAmmoPack :     Bullets " + weaponTracker.currentBullets);
+            Debug.Log("FishWeaponController.ApplyAmmoPack :     Shells " + weaponTracker.currentShells);
+            Debug.Log("FishWeaponController.ApplyAmmoPack :     Explosives " + weaponTracker.currentExplosives);
+            Debug.Log("FishWeaponController.ApplyAmmoPack :     Bolts " + weaponTracker.currentBolts);
+            Debug.Log("FishWeaponController.ApplyAmmoPack :     Lasers " + weaponTracker.currentLasers);
         }
 
         /*public void ServerGetStoredWeapon(FishWeaponDef newWeapon, float ammo, FishWeaponController fwc)

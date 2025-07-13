@@ -606,16 +606,17 @@ namespace FishMod.Survivors.Fish
                 Debug.Log("FishSurvivor.GlobalEventManager_onCharacterDeathGlobal : Fish player killed " + report.victimBody.GetDisplayName());
 
                 CharacterMaster fishMaster = report.attackerMaster;
+                HullClassification hullClassification = report.victimBody.hullClassification;
 
                 // elites, bosses, and bodies larger than human can drop weapons by default
                 bool eligibleWeaponDrop = 
                     report.victimIsElite || 
-                    report.victimIsBoss || 
-                    report.victimBody.hullClassification != HullClassification.Human;
+                    report.victimIsBoss ||
+                    hullClassification != HullClassification.Human;
 
                 if (eligibleWeaponDrop && Util.CheckRoll(8f, fishMaster))
                 {
-                    PickupIndex pickupIndex = PickupCatalog.FindPickupIndex(Modules.Weapons.Guns.Revolver.instance.itemDef.itemIndex);
+                    PickupIndex pickupIndex = PickupCatalog.FindPickupIndex(Revolver.instance.itemDef.itemIndex);
 
                     Debug.Log("FishSurvivor.GlobalEventManager_onCharacterDeathGlobal : Attempting to create pickup of type " + PickupCatalog.GetPickupDef(pickupIndex).nameToken);
 
@@ -625,6 +626,38 @@ namespace FishMod.Survivors.Fish
                     };
 
                     PickupDropletController.CreatePickupDroplet(pickupInfo, report.victimBody.corePosition, Vector3.up);
+                }
+
+                FishWeaponController fishWeaponController = report.attackerBody.GetComponent<FishWeaponController>();
+
+                float ammoDropChance = 0f;
+                if (hullClassification == HullClassification.Human)
+                    ammoDropChance = 15f;
+
+                if (hullClassification == HullClassification.Golem)
+                    ammoDropChance = 30f;
+
+                if (hullClassification == HullClassification.BeetleQueen)
+                    ammoDropChance = 200f;
+
+                if (report.victimIsElite)
+                    ammoDropChance += 20f;
+
+                if (report.victimIsBoss)
+                    ammoDropChance += 50f;
+
+                // ammoDropChance *= 999f; // ffffffucking debug
+
+                if (Util.CheckRoll(ammoDropChance * fishWeaponController.GetCurrentDropMultiplier(), fishMaster))
+                {
+                    GameObject pickup = UnityEngine.Object.Instantiate(FishAssets.ammoPickupPrefab, report.victimBody.corePosition, UnityEngine.Random.rotation);
+                    TeamFilter teamFilter = pickup.GetComponent<TeamFilter>();
+                    if (teamFilter != null)
+                    {
+                        teamFilter.teamIndex = report.attackerTeamIndex;
+                    }
+
+                    NetworkServer.Spawn(pickup);
                 }
             }
         }

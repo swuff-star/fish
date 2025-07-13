@@ -15,7 +15,7 @@ namespace FishMod.Modules {
         public static List<GameObject> bodyPrefabs = new List<GameObject>();
         public static List<GameObject> masterPrefabs = new List<GameObject>();
         public static List<GameObject> projectilePrefabs = new List<GameObject>();
-        public static List<GameObject> pickupPrefabs = new List<GameObject>();
+        public static List<GameObject> networkedObjectPrefabs = new List<GameObject>();
 
         public static List<SurvivorDef> survivorDefs = new List<SurvivorDef>();
         public static List<UnlockableDef> unlockableDefs = new List<UnlockableDef>();
@@ -48,6 +48,7 @@ namespace FishMod.Modules {
             contentPack.bodyPrefabs.Add(bodyPrefabs.ToArray());
             contentPack.masterPrefabs.Add(masterPrefabs.ToArray());
             contentPack.projectilePrefabs.Add(projectilePrefabs.ToArray());
+            contentPack.networkedObjectPrefabs.Add(networkedObjectPrefabs.ToArray());
 
             contentPack.survivorDefs.Add(survivorDefs.ToArray());
             contentPack.unlockableDefs.Add(unlockableDefs.ToArray());

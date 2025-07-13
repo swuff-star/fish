@@ -35,18 +35,23 @@ namespace FishMod.Characters.Survivors.Fish.Components
         // ammo types
         public int currentBullets = 0;
         public int maxBullets = 255;
+        public int bulletsPerPickup = 32;
 
         public int currentShells = 0;
         public int maxShells = 55;
+        public int shellsPerPickup = 8;
 
         public int currentExplosives = 0;
         public int maxExplosives = 55;
+        public int explosivesPerPickup = 6;
 
         public int currentBolts = 0;
         public int maxBolts = 55;
+        public int boltsPerPickup = 7;
 
         public int currentLasers = 0;
         public int maxLasers = 55;
+        public int lasersPerPickup = 10;
 
         public FishWeaponDef.AmmoType activeAmmo = FishWeaponDef.AmmoType.None;
 
@@ -64,6 +69,11 @@ namespace FishMod.Characters.Survivors.Fish.Components
         public void SetAmmoType(AmmoType type)
         {
             activeAmmo = type;
+        }
+
+        public bool MaxAmmo()
+        {
+            return currentBullets >= maxBullets && currentShells >= maxShells && currentExplosives >= maxExplosives && currentBolts >= maxBolts && currentLasers >= maxLasers;  
         }
 
         public int GetCurrentAmmoTypeRemaining()
@@ -86,9 +96,9 @@ namespace FishMod.Characters.Survivors.Fish.Components
                     return 0;
             }
         }
-        public int GetCurrentAmmoTypeMax()
+        public int GetAmmoTypeMax(AmmoType ammoType)
         {
-            switch (activeAmmo)
+            switch (ammoType)
             {
                 case FishWeaponDef.AmmoType.Bullet:
                     return maxBullets;
@@ -101,6 +111,28 @@ namespace FishMod.Characters.Survivors.Fish.Components
                 case FishWeaponDef.AmmoType.Laser:
                     return maxLasers;
                 case FishWeaponDef.AmmoType.None:
+                    return -1;
+                default:
+                    return 0;
+            }
+        }
+
+        public int GetAmmoTypeCount(AmmoType ammoType)
+        {
+            switch (ammoType)
+            {
+                case FishWeaponDef.AmmoType.Bullet:
+                    return currentBullets;
+                case FishWeaponDef.AmmoType.Shell:
+                    return currentShells;
+                case FishWeaponDef.AmmoType.Explosive:
+                    return currentExplosives;
+                case FishWeaponDef.AmmoType.Bolt:
+                    return currentBolts;
+                case FishWeaponDef.AmmoType.Laser:
+                    return currentLasers;
+                case FishWeaponDef.AmmoType.None:
+                    return -1;
                 default:
                     return 0;
             }
@@ -153,6 +185,111 @@ namespace FishMod.Characters.Survivors.Fish.Components
                     currentLasers = Mathf.Max(currentLasers, 0);
                     break;
             }
+        }
+
+        public void GiveAmmo(int amount, AmmoType ammoType)
+        {
+            Debug.Log("FishWeaponTracker.GiveAmmo: Giving " + amount + " to " + ammoType);
+
+            switch (ammoType)
+            {
+                case AmmoType.Bullet:
+                    currentBullets += amount;
+                    currentBullets = Mathf.Min(currentBullets, maxBullets);
+                    break;
+                case AmmoType.Shell:
+                    currentShells += amount;
+                    currentShells = Mathf.Min(currentShells, maxShells);
+                    break;
+                case AmmoType.Explosive:
+                    currentExplosives += amount;
+                    currentExplosives = Mathf.Min(currentExplosives, maxExplosives);
+                    break;
+                case AmmoType.Bolt:
+                    currentBolts += amount;
+                    currentBolts = Mathf.Min(currentBolts, maxBolts);
+                    break;
+                case AmmoType.Laser:
+                    currentLasers += amount;
+                    currentLasers = Mathf.Min(currentLasers, maxLasers);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public int GetAmmoTypePickupAmount(AmmoType ammoType)
+        {
+            switch (ammoType)
+            {
+                case FishWeaponDef.AmmoType.Bullet:
+                    return bulletsPerPickup;
+                case FishWeaponDef.AmmoType.Shell:
+                    return shellsPerPickup;
+                case FishWeaponDef.AmmoType.Explosive:
+                    return explosivesPerPickup;
+                case FishWeaponDef.AmmoType.Bolt:
+                    return boltsPerPickup;
+                case FishWeaponDef.AmmoType.Laser:
+                    return lasersPerPickup;
+                default:
+                    return 0;
+            }
+        }
+
+        public AmmoType GetPrimaryAmmoType()
+        {
+            if (weaponData[0].weaponDef != null)
+                return weaponData[0].weaponDef.ammoType;
+
+            return AmmoType.None;
+        }
+
+        public AmmoType GetSecondaryAmmoType()
+        {
+            if (weaponData[1].weaponDef != null)
+            {
+                return weaponData[1].weaponDef.ammoType;
+
+            }
+
+            return AmmoType.None;
+        }
+
+        public float CalculateCurrentDropMultiplier()
+        {
+            float primaryMultiplier = 0.5f;
+            float secondaryMultiplier = 0.5f;
+
+            if (weaponData[0].weaponDef != null)
+            {
+                float primaryCount = GetAmmoTypeCount(GetPrimaryAmmoType());
+                float primaryMax = GetAmmoTypeMax(GetPrimaryAmmoType());
+
+                primaryMultiplier = GetAmmoMultiplier(primaryCount / primaryMax);
+            }
+
+            if (weaponData[1].weaponDef != null)
+            {
+                float secondaryCount = GetAmmoTypeCount(GetSecondaryAmmoType());
+                float secondaryMax = GetAmmoTypeMax(GetSecondaryAmmoType());
+
+                secondaryMultiplier = GetAmmoMultiplier(secondaryCount / secondaryMax);
+            }
+
+            return (primaryMultiplier + secondaryMultiplier);
+        }
+
+        public float GetAmmoMultiplier(float ammoPercentage)
+        {
+            if (ammoPercentage <= 0.2f)
+                return 0.8f;
+
+            else if (ammoPercentage >= 0.6f)
+                return 0.15f;
+
+            else
+                return 0.5f;
         }
 
         private FishWeaponController fishWeaponController

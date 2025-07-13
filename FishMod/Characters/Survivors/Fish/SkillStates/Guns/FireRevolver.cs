@@ -122,11 +122,6 @@ namespace EntityStates.Fish.Guns
 
             if (weaponController != null) weaponController.ConsumeAmmo();
 
-            if (fwsd != null)
-            {
-
-            }
-
             //skillLocator.primary.cooldownOverride = reloadDuration;
             if (skillLocator.primary.skillDef is FishWeaponSkillDef fishWeaponSkillDef)
             {

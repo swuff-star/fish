@@ -3,6 +3,9 @@ using UnityEngine;
 using FishMod.Modules;
 using System;
 using RoR2.Projectile;
+using R2API;
+using UnityEngine.AddressableAssets;
+using FishMod.Characters.Survivors.Fish.Components;
 
 namespace FishMod.Survivors.Fish
 {
@@ -17,8 +20,11 @@ namespace FishMod.Survivors.Fish
         // networked hit sounds
         public static NetworkSoundEventDef swordHitSoundEvent;
 
-        //projectiles
+        // projectiles
         public static GameObject bombProjectilePrefab;
+
+        // pickups
+        public static GameObject ammoPickupPrefab;
 
         private static AssetBundle _assetBundle;
 
@@ -32,6 +38,8 @@ namespace FishMod.Survivors.Fish
             CreateEffects();
 
             CreateProjectiles();
+
+            CreatePickups();
         }
 
         #region effects
@@ -71,6 +79,53 @@ namespace FishMod.Survivors.Fish
         {
             CreateBombProjectile();
             Content.AddProjectilePrefab(bombProjectilePrefab);
+        }
+
+        private static void CreatePickups()
+        {
+            CreateAmmoPickup();
+            Content.AddNetworkedObjectPrefab(ammoPickupPrefab);
+        }
+
+        private static void CreateAmmoPickup()
+        {
+            ammoPickupPrefab = PrefabAPI.InstantiateClone(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Bandolier/AmmoPack.prefab").WaitForCompletion(), "FishAmmoPickup");
+
+            GameObject pickupTrigger = ammoPickupPrefab.transform.Find("PickupTrigger").gameObject;
+            if (pickupTrigger != null)
+            {
+                AmmoPickup ammoPickup = pickupTrigger.GetComponent<AmmoPickup>();
+
+                GameObject baseObject = ammoPickup.baseObject;
+                TeamFilter teamFilter = ammoPickup.teamFilter;
+                GameObject pickupEffect = ammoPickup.pickupEffect;
+
+                UnityEngine.Object.Destroy(pickupTrigger.GetComponent<AmmoPickup>());
+
+                FishAmmoPickup fishAmmoPickup = pickupTrigger.AddComponent<FishAmmoPickup>();
+                fishAmmoPickup.baseObject = baseObject;
+                fishAmmoPickup.teamFilter = teamFilter;
+                fishAmmoPickup.pickupEffect = pickupEffect;
+            }
+
+            GameObject gravitationController = ammoPickupPrefab.transform.Find("GravitationController").gameObject;
+            if (gravitationController != null)
+            {
+                GravitatePickup gravitatePickup = gravitationController.GetComponent<GravitatePickup>();
+
+                Rigidbody rb = gravitatePickup.rigidbody;
+                TeamFilter teamFilter = gravitatePickup.teamFilter;
+                float acceleration = gravitatePickup.acceleration;
+                float maxSpeed = gravitatePickup.maxSpeed;
+
+                UnityEngine.Object.Destroy(gravitationController.GetComponent<GravitatePickup>());
+
+                FishGravitatePickup fishGravitatePickup = gravitationController.AddComponent<FishGravitatePickup>();
+                fishGravitatePickup.rigidbody = rb;
+                fishGravitatePickup.teamFilter = teamFilter;
+                fishGravitatePickup.acceleration = acceleration;
+                fishGravitatePickup.maxSpeed = maxSpeed;
+            }
         }
 
         private static void CreateBombProjectile()

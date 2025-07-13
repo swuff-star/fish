@@ -18,6 +18,11 @@ namespace FishMod.Modules
             ContentPacks.masterPrefabs.Add(prefab);
         }
 
+        internal static void AddNetworkedObjectPrefab(GameObject prefab)
+        {
+            ContentPacks.networkedObjectPrefabs.Add(prefab);
+        }
+
         internal static void AddProjectilePrefab(GameObject prefab)
         {
             ContentPacks.projectilePrefabs.Add(prefab);
