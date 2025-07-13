@@ -1,6 +1,7 @@
 ﻿using BepInEx.Configuration;
 using EntityStates;
 using EntityStates.Fish;
+using EntityStates.LunarWisp;
 using FishMod.Characters.Survivors.Fish.Components;
 using FishMod.Modules;
 using FishMod.Modules.Characters;
@@ -15,6 +16,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using static RoR2.GenericPickupController;
 using static RoR2.TeleporterInteraction;
 
@@ -36,10 +38,10 @@ namespace FishMod.Survivors.Fish
         public override string displayPrefabName => "FishDisplay";
 
         public const string FISH_PREFIX = FishPlugin.DEVELOPER_PREFIX + "_FISH_";
-        
+
         //used when registering your survivor's language tokens
         public override string survivorTokenPrefix => FISH_PREFIX;
-        
+
         public override BodyInfo bodyInfo => new BodyInfo
         {
             bodyName = bodyName,
@@ -78,8 +80,8 @@ namespace FishMod.Survivors.Fish
         };
 
         public override UnlockableDef characterUnlockableDef => FishUnlockables.characterUnlockableDef;
-        
-        public override ItemDisplaysBase itemDisplays => new FishItemDisplays();
+
+        // public override ItemDisplaysBase itemDisplays => new FishItemDisplays();
 
         //set in base classes
         public override AssetBundle assetBundle { get; protected set; }
@@ -115,12 +117,12 @@ namespace FishMod.Survivors.Fish
             FishAssets.Init(assetBundle);
             FishBuffs.Init(assetBundle);
 
+            InitializeWeapons();
+
             InitializeEntityStateMachines();
             InitializeSkills();
             InitializeSkins();
             InitializeCharacterMaster();
-
-            InitializeWeapons();
 
             AdditionalBodySetup();
 
@@ -141,7 +143,7 @@ namespace FishMod.Survivors.Fish
             Prefabs.SetupHitBoxGroup(characterModelObject, "SwordGroup", "SwordHitbox");
         }
 
-        public override void InitializeEntityStateMachines() 
+        public override void InitializeEntityStateMachines()
         {
             //clear existing state machines from your cloned body (probably commando)
             //omit all this if you want to just keep theirs
@@ -150,7 +152,7 @@ namespace FishMod.Survivors.Fish
             //the main "Body" state machine has some special properties
             Prefabs.AddMainEntityStateMachine(bodyPrefab, "Body", typeof(EntityStates.GenericCharacterMain), typeof(EntityStates.SpawnTeleporterState));
             //if you set up a custom main characterstate, set it up here
-                //don't forget to register custom entitystates in your HenryStates.cs
+            //don't forget to register custom entitystates in your HenryStates.cs
 
             Prefabs.AddEntityStateMachine(bodyPrefab, "Weapon");
             Prefabs.AddEntityStateMachine(bodyPrefab, "Weapon2");
@@ -243,7 +245,17 @@ namespace FishMod.Survivors.Fish
             primarySkillDef1.stepCount = 2;
             primarySkillDef1.stepGraceDuration = 0.5f;
 
-            Skills.AddPrimarySkills(bodyPrefab, primarySkillDef1);
+            // Skills.AddPrimarySkills(bodyPrefab, primarySkillDef1);
+
+            // assign revolver as primary
+            if (Revolver.instance.primarySkillDef != null)
+            {
+                Skills.AddPrimarySkills(bodyPrefab, Revolver.instance.primarySkillDef);
+            }
+            else
+            {
+                Debug.LogError("FishSurvivor.AddPrimarySkills : Failed to find Revolver skillDef! Is it disabled?");
+            }
         }
 
         private void AddSecondarySkills()
@@ -351,7 +363,7 @@ namespace FishMod.Survivors.Fish
             Skills.AddSpecialSkills(bodyPrefab, specialSkillDef1);
         }
         #endregion skills
-        
+
         #region skins
         public override void InitializeSkins()
         {
@@ -370,9 +382,9 @@ namespace FishMod.Survivors.Fish
                 prefabCharacterModel.gameObject);
 
             //these are your Mesh Replacements. The order here is based on your CustomRendererInfos from earlier
-                //pass in meshes as they are named in your assetbundle
+            //pass in meshes as they are named in your assetbundle
             //currently not needed as with only 1 skin they will simply take the default meshes
-                //uncomment this when you have another skin
+            //uncomment this when you have another skin
             //defaultSkin.meshReplacements = Modules.Skins.getMeshReplacements(assetBundle, defaultRendererinfos,
             //    "meshHenrySword",
             //    "meshHenryGun",
@@ -384,7 +396,7 @@ namespace FishMod.Survivors.Fish
 
             //uncomment this when you have a mastery skin
             #region MasterySkin
-            
+
             ////creating a new skindef as we did before
             //SkinDef masterySkin = Modules.Skins.CreateSkinDef(HENRY_PREFIX + "MASTERY_SKIN_NAME",
             //    assetBundle.LoadAsset<Sprite>("texMasteryAchievement"),
@@ -417,7 +429,7 @@ namespace FishMod.Survivors.Fish
             ////simply find an object on your child locator you want to activate/deactivate and set if you want to activate/deacitvate it with this skin
 
             //skins.Add(masterySkin);
-            
+
             #endregion
 
             skinController.skins = skins.ToArray();
@@ -449,10 +461,46 @@ namespace FishMod.Survivors.Fish
         private void AddHooks()
         {
             R2API.RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
+
+            // manage weapon+ammo drops (and later rads)
             GlobalEventManager.onCharacterDeathGlobal += GlobalEventManager_onCharacterDeathGlobal;
+
+            // weapon reload -> skill icon ui
             On.RoR2.UI.SkillIcon.Update += SkillIcon_Update;
+
+            // define + manage weapon pools
+            On.RoR2.SceneDirector.Start += SceneDirector_Start;
+            On.RoR2.Run.Start += Run_Start;
+
+            On.RoR2.GenericPickupController.AttemptGrant += GenericPickupController_AttemptGrant;
         }
 
+        private void Run_Start(On.RoR2.Run.orig_Start orig, Run self)
+        {
+            orig(self);
+
+            FishWeaponCatalog.scenesCleared = 0;
+        }
+
+        private void SceneDirector_Start(On.RoR2.SceneDirector.orig_Start orig, SceneDirector self)
+        {
+            orig(self);
+
+            Debug.Log("FishSurvivor.SceneDirector_Start : Active on " + SceneManager.GetActiveScene().name);
+
+            if (Run.instance == null)
+            {
+                return;
+            }
+
+            // in proper nuclear throne fashion, we even count intermissions and secrets to the counter
+            FishWeaponCatalog.scenesCleared++;
+
+            FishWeaponCatalog.RefreshAvailableWeapons();
+        }
+
+        // this big hook just catches skill icons and applies weapon reload times to the ui
+        // the world if you could just override skill cooldown:    utopia.gif
         private void SkillIcon_Update(On.RoR2.UI.SkillIcon.orig_Update orig, SkillIcon self)
         {
             // unfortunately mostly the same logic as the original other than feeding our custom cooldown :/
@@ -587,18 +635,19 @@ namespace FishMod.Survivors.Fish
             orig(self);
         }
 
+        // drop manager
         private void GlobalEventManager_onCharacterDeathGlobal(DamageReport report)
         {
             if (!NetworkServer.active)
                 return;
 
             // victim exists and had a master
-            bool validVictim = 
-                report.victimBody != null && 
+            bool validVictim =
+                report.victimBody != null &&
                 report.victimMaster != null;
 
             // killer must be fish. needs expanded if we ever want more NT survivors
-            bool killedByFish = 
+            bool killedByFish =
                 report.attackerBodyIndex == BodyCatalog.FindBodyIndex(instance.bodyPrefab);
 
             if (validVictim && killedByFish)
@@ -609,20 +658,26 @@ namespace FishMod.Survivors.Fish
                 HullClassification hullClassification = report.victimBody.hullClassification;
 
                 // elites, bosses, and bodies larger than human can drop weapons by default
-                bool eligibleWeaponDrop = 
-                    report.victimIsElite || 
+                bool eligibleWeaponDrop =
+                    report.victimIsElite ||
                     report.victimIsBoss ||
                     hullClassification != HullClassification.Human;
 
-                if (eligibleWeaponDrop && Util.CheckRoll(8f, fishMaster))
+                if (true || eligibleWeaponDrop && Util.CheckRoll(8f, fishMaster))
                 {
-                    PickupIndex pickupIndex = PickupCatalog.FindPickupIndex(Revolver.instance.itemDef.itemIndex);
+                    bool isRobot = false;
+                    int offset = -1;
 
-                    Debug.Log("FishSurvivor.GlobalEventManager_onCharacterDeathGlobal : Attempting to create pickup of type " + PickupCatalog.GetPickupDef(pickupIndex).nameToken);
+                    if (isRobot) offset++;
+
+
+                    PickupIndex pickupIndex = PickupCatalog.FindPickupIndex(FishWeaponCatalog.RandomAvailableWeaponDef(offset).itemDef.itemIndex);
+
+                    Debug.Log("FishSurvivor.GlobalEventManager_onCharacterDeathGlobal : Attempting to create weapon pickup of type " + PickupCatalog.GetPickupDef(pickupIndex).nameToken);
 
                     CreatePickupInfo pickupInfo = new CreatePickupInfo
                     {
-                        pickupIndex = pickupIndex
+                        pickupIndex = pickupIndex,
                     };
 
                     PickupDropletController.CreatePickupDroplet(pickupInfo, report.victimBody.corePosition, Vector3.up);
@@ -630,7 +685,8 @@ namespace FishMod.Survivors.Fish
 
                 FishWeaponController fishWeaponController = report.attackerBody.GetComponent<FishWeaponController>();
 
-                float ammoDropChance = 0f;
+                float ammoDropChance = 5f;
+                int maxDrops = 1;
                 if (hullClassification == HullClassification.Human)
                     ammoDropChance = 15f;
 
@@ -641,23 +697,40 @@ namespace FishMod.Survivors.Fish
                     ammoDropChance = 200f;
 
                 if (report.victimIsElite)
-                    ammoDropChance += 20f;
+                {
+                    ammoDropChance += 20f; maxDrops++;
+                }
 
                 if (report.victimIsBoss)
-                    ammoDropChance += 50f;
+                {
+                    ammoDropChance += 50f; maxDrops++;
+                }
+
+                // hull size is *mostly* indicative of intended strength in so we're using that
+                // bigger guy = bigger health bar i mean it just makes sense. but theres some exceptions
+                // looking at you, stone titan :/
+
+                // elite and boss enemies have extra opportunites to drop ammo
+                // in actual nuclear throne i'm pretty sure this is limited to 2
+                // but that game doesnt have elite bosses and that's the only place we'll ever see 3
+
+                // rabbit paw maybe could just be another add to maxDrops
 
                 // ammoDropChance *= 999f; // ffffffucking debug
 
-                if (Util.CheckRoll(ammoDropChance * fishWeaponController.GetCurrentDropMultiplier(), fishMaster))
+                for (int i = 0; i < maxDrops; ++i)
                 {
-                    GameObject pickup = UnityEngine.Object.Instantiate(FishAssets.ammoPickupPrefab, report.victimBody.corePosition, UnityEngine.Random.rotation);
-                    TeamFilter teamFilter = pickup.GetComponent<TeamFilter>();
-                    if (teamFilter != null)
+                    if (Util.CheckRoll(ammoDropChance * fishWeaponController.GetCurrentDropMultiplier(), fishMaster))
                     {
-                        teamFilter.teamIndex = report.attackerTeamIndex;
-                    }
+                        GameObject pickup = UnityEngine.Object.Instantiate(FishAssets.ammoPickupPrefab, report.victimBody.corePosition, UnityEngine.Random.rotation);
+                        TeamFilter teamFilter = pickup.GetComponent<TeamFilter>();
+                        if (teamFilter != null)
+                        {
+                            teamFilter.teamIndex = report.attackerTeamIndex;
+                        }
 
-                    NetworkServer.Spawn(pickup);
+                        NetworkServer.Spawn(pickup);
+                    }
                 }
             }
         }
@@ -669,6 +742,34 @@ namespace FishMod.Survivors.Fish
             {
                 args.armorAdd += 300;
             }
+        }
+
+        private static void GenericPickupController_AttemptGrant(On.RoR2.GenericPickupController.orig_AttemptGrant orig, GenericPickupController self, CharacterBody body)
+        {
+            if (self && body)
+            {
+                if (self.pickupIndex.isValid)
+                {
+                    ItemDef itemDef = ItemCatalog.GetItemDef(self.pickupIndex.itemIndex);
+                    if (itemDef != null && FishWeaponCatalog.GetWeaponDefFromItemDef(itemDef) != null)
+                    {
+                        if (body.TryGetComponent(out FishWeaponController fwc))
+                        {
+                            if (self.chestGeneratedFrom == null || self.chestGeneratedFrom != fwc.chestBehavior)
+                            {
+                                fwc.GiveAmmoPackOfType(FishWeaponCatalog.GetWeaponDefFromItemDef(itemDef).ammoType);
+                            }
+                        }
+                        else
+                        {
+                            return; // non-fish can't pick up guns
+                        }
+                    }
+
+                }
+            }
+
+            orig(self, body);
         }
     }
 }

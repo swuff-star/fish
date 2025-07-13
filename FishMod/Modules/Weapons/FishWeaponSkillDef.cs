@@ -14,6 +14,10 @@ namespace FishMod.Modules.Weapons
         public float basePseudoCooldown;
         public float pseudoCooldownRemaining = 0f;
 
+        // we can associate the skill with the weapon
+        // useful for if we do golden weapons later
+        public FishWeaponDef weaponDef;
+
         public override BaseSkillInstanceData OnAssigned([NotNull] GenericSkill skillSlot)
         {
             basePseudoCooldown = baseRechargeInterval;

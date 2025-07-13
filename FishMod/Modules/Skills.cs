@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using FishMod;
 using UnityEngine;
 using FishMod.Characters.Survivors.Fish.Components;
+using static FishMod.Modules.Skins;
+using FishMod.Modules.Weapons;
 
 namespace FishMod.Modules
 {
@@ -187,6 +189,49 @@ namespace FishMod.Modules
             skillDef.cancelSprintingOnActivation = skillDefInfo.cancelSprintingOnActivation;
 
             skillDef.keywordTokens = skillDefInfo.keywordTokens;
+
+            FishMod.Modules.Content.AddSkillDef(skillDef);
+
+            return skillDef;
+        }
+
+        internal static FishWeaponSkillDef CreateFishWeaponSkillDef<T>(SkillDefInfo skillDefInfo, FishWeaponDef weaponDef) where T : FishWeaponSkillDef
+        {
+            //pass in a type for a custom skilldef, e.g. HuntressTrackingSkillDef
+            T skillDef = ScriptableObject.CreateInstance<T>();
+
+            skillDef.skillName = skillDefInfo.skillName;
+            (skillDef as ScriptableObject).name = skillDefInfo.skillName;
+            skillDef.skillNameToken = skillDefInfo.skillNameToken;
+            skillDef.skillDescriptionToken = skillDefInfo.skillDescriptionToken;
+            skillDef.icon = skillDefInfo.skillIcon;
+
+            skillDef.activationState = skillDefInfo.activationState;
+            skillDef.activationStateMachineName = skillDefInfo.activationStateMachineName;
+            skillDef.interruptPriority = skillDefInfo.interruptPriority;
+
+            skillDef.baseMaxStock = skillDefInfo.baseMaxStock;
+            skillDef.baseRechargeInterval = skillDefInfo.baseRechargeInterval;
+
+            skillDef.rechargeStock = skillDefInfo.rechargeStock;
+            skillDef.requiredStock = skillDefInfo.requiredStock;
+            skillDef.stockToConsume = skillDefInfo.stockToConsume;
+
+            skillDef.attackSpeedBuffsRestockSpeed = skillDefInfo.attackSpeedBuffsRestockSpeed;
+
+            skillDef.dontAllowPastMaxStocks = skillDefInfo.dontAllowPastMaxStocks;
+            skillDef.beginSkillCooldownOnSkillEnd = skillDefInfo.beginSkillCooldownOnSkillEnd;
+            skillDef.canceledFromSprinting = skillDefInfo.canceledFromSprinting;
+            skillDef.forceSprintDuringState = skillDefInfo.forceSprintDuringState;
+            skillDef.fullRestockOnAssign = skillDefInfo.fullRestockOnAssign;
+            skillDef.resetCooldownTimerOnUse = skillDefInfo.resetCooldownTimerOnUse;
+            skillDef.isCombatSkill = skillDefInfo.isCombatSkill;
+            skillDef.mustKeyPress = skillDefInfo.mustKeyPress;
+            skillDef.cancelSprintingOnActivation = skillDefInfo.cancelSprintingOnActivation;
+
+            skillDef.keywordTokens = skillDefInfo.keywordTokens;
+
+            skillDef.weaponDef = weaponDef;
 
             FishMod.Modules.Content.AddSkillDef(skillDef);
 

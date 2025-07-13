@@ -23,7 +23,7 @@ namespace FishMod.Modules.Weapons.Guns
         public override FishWeaponDef.AmmoType ammoType => FishWeaponDef.AmmoType.Bullet;
         public override bool storedOnBack => false;
 
-        public override FishWeaponSkillDef primarySkillDef => Skills.CreateSkillDef<FishWeaponSkillDef>(new SkillDefInfo
+        public override FishWeaponSkillDef primarySkillDef => Skills.CreateFishWeaponSkillDef<FishWeaponSkillDef>(new SkillDefInfo
             {
                 skillName = "FishRevolver",
                 skillNameToken = FishSurvivor.FISH_PREFIX + "REVOLVER_NAME",
@@ -53,7 +53,8 @@ namespace FishMod.Modules.Weapons.Guns
                 cancelSprintingOnActivation = true,
                 forceSprintDuringState = false,
 
-            });
+                
+            }, weaponDef);
 
         public override void Init()
         {

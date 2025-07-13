@@ -25,6 +25,7 @@ namespace FishMod.Characters.Survivors.Fish.Components
         private Animator animator;
         private SkillLocator skillLocator;
         private SkillDef skillOverride;
+        public ChestBehavior chestBehavior = new ChestBehavior();
 
         // current + offhand weapons
         public FishWeaponDef weaponDef;
@@ -104,7 +105,7 @@ namespace FishMod.Characters.Survivors.Fish.Components
             EquipWeapon(weaponTracker.equippedIndex);
         }
 
-        public void EquipWeapon(int index, bool setAmmo = true)
+        public void EquipWeapon(int index)
         {
             if (index >= weaponTracker.weaponData.Length)
             {
@@ -141,6 +142,8 @@ namespace FishMod.Characters.Survivors.Fish.Components
 
             weaponTracker.offhandRemainingCooldown = cooldownRemaining;
 
+            weaponTracker.SyncStocksAndAmmo();
+
             Debug.Log("FishWeaponController.EquipWeapon : Secondary currently has " + weaponTracker.offhandRemainingCooldown + " remaining reload time");
 
             Debug.Log("FishWeaponController.EquipWeapon : Primary override has " + skillLocator.primary.stock + " / " + skillLocator.primary.maxStock);
@@ -151,13 +154,21 @@ namespace FishMod.Characters.Survivors.Fish.Components
 
         public void CycleWeapon()
         {
+            for (int i = 0; i < weaponTracker.weaponData.Length; ++i)
+            {
+                if (weaponTracker.weaponData[i].weaponDef == null)
+                {
+                    Debug.LogWarning("FishWeaponController.EquipWeapon : Attempting to switch weapons with no current secondary!");
+                    return;
+                }
+            }
             weaponTracker.SwapWeapons();
             EquipWeapon(weaponTracker.equippedIndex);
         }
 
         public float GetCurrentDropMultiplier()
         {
-            return weaponTracker.CalculateCurrentDropMultiplier();
+            return weaponTracker.CalculateCurrentDropRateMultiplier();
         }
 
         public bool MaxAmmo()
@@ -181,6 +192,11 @@ namespace FishMod.Characters.Survivors.Fish.Components
         public void GiveAmmoOfType(int amount = 1, AmmoType type = AmmoType.None)
         {
             weaponTracker.GiveAmmo(amount, type);
+        }
+
+        public void GiveAmmoPackOfType(AmmoType type = AmmoType.None)
+        {
+            weaponTracker.GiveAmmo(weaponTracker.GetAmmoTypePickupAmount(type), type);
         }
 
         public void GiveAmmoPack()
@@ -285,13 +301,6 @@ namespace FishMod.Characters.Survivors.Fish.Components
             Debug.Log("FishWeaponController.ApplyAmmoPack : Selected ammo type is " + chosenType);
 
             int ammoAmount = weaponTracker.GetAmmoTypePickupAmount(chosenType);
-
-            // fish gets 25% more ammo rounded up
-            // future proofing by making it fish-specific ig
-            if (BodyCatalog.FindBodyPrefab(characterBody) == FishSurvivor.instance.bodyPrefab)
-            {
-                ammoAmount = (int)MathF.Ceiling(1.25f * ammoAmount);
-            }
 
             if (chosenType == primaryType)
             {

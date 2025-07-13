@@ -13,7 +13,7 @@ namespace EntityStates.Fish.Guns
         public static GameObject hitEffectPrefab = Commando.CommandoWeapon.FirePistol2.hitEffectPrefab;
         public static GameObject tracerEffectPrefab = Commando.CommandoWeapon.FirePistol2.tracerEffectPrefab;
 
-        public static float damageCoefficient = 1f;
+        public static float damageCoefficient = 2f;
         public static float procCoefficient = 1f;
         public static float force = 50f;
         public static float radius = 0.5f;
