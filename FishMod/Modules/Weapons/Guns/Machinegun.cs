@@ -23,7 +23,7 @@ namespace FishMod.Modules.Weapons.Guns
         public override FishWeaponDef.AmmoType ammoType => FishWeaponDef.AmmoType.Bullet;
         public override bool storedOnBack => false;
 
-        public override SkillDef primarySkillDef => Skills.CreateSkillDef<SkillDef>(new SkillDefInfo
+        public override FishWeaponSkillDef primarySkillDef => Skills.CreateSkillDef<FishWeaponSkillDef>(new SkillDefInfo
             {
                 skillName = "FishMachinegun",
                 skillNameToken = FishSurvivor.FISH_PREFIX + "MACHINEGUN_NAME",
@@ -34,7 +34,7 @@ namespace FishMod.Modules.Weapons.Guns
                 activationStateMachineName = "Weapon",
                 interruptPriority = InterruptPriority.Any,
 
-                baseRechargeInterval = 0f,
+                baseRechargeInterval = reloadDuration,
                 baseMaxStock = 255,
 
                 rechargeStock = 0,
@@ -46,6 +46,7 @@ namespace FishMod.Modules.Weapons.Guns
                 dontAllowPastMaxStocks = false,
                 mustKeyPress = false,
                 beginSkillCooldownOnSkillEnd = true,
+                attackSpeedBuffsRestockSpeed = true,
 
                 isCombatSkill = true,
                 canceledFromSprinting = false,

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using FishMod;
 using UnityEngine;
+using FishMod.Characters.Survivors.Fish.Components;
 
 namespace FishMod.Modules
 {
@@ -173,6 +174,8 @@ namespace FishMod.Modules
             skillDef.requiredStock = skillDefInfo.requiredStock;
             skillDef.stockToConsume = skillDefInfo.stockToConsume;
 
+            skillDef.attackSpeedBuffsRestockSpeed = skillDefInfo.attackSpeedBuffsRestockSpeed;
+
             skillDef.dontAllowPastMaxStocks = skillDefInfo.dontAllowPastMaxStocks;
             skillDef.beginSkillCooldownOnSkillEnd = skillDefInfo.beginSkillCooldownOnSkillEnd;
             skillDef.canceledFromSprinting = skillDefInfo.canceledFromSprinting;
@@ -186,7 +189,6 @@ namespace FishMod.Modules
             skillDef.keywordTokens = skillDefInfo.keywordTokens;
 
             FishMod.Modules.Content.AddSkillDef(skillDef);
-
 
             return skillDef;
         }
@@ -226,6 +228,8 @@ namespace FishMod.Modules
         public int rechargeStock = 1;
         public int requiredStock = 1;
         public int stockToConsume = 1;
+
+        public bool attackSpeedBuffsRestockSpeed = false;
 
         public bool resetCooldownTimerOnUse = false;
         public bool fullRestockOnAssign = true;

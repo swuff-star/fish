@@ -1,4 +1,5 @@
-﻿using RoR2;
+﻿using FishMod.Modules.Weapons;
+using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -28,7 +29,8 @@ namespace EntityStates.Fish.Guns
         public static string muzzleName = "Muzzle";
 
         private float fireTime;
-        private float duration;
+        private float stateDuration;
+        private float reloadDuration;
         private Ray aimRay;
         private bool isCrit;
 
@@ -38,13 +40,14 @@ namespace EntityStates.Fish.Guns
         {
             base.OnEnter();
 
-            duration = baseDuration / attackSpeedStat;
-            fireTime = firePercentTime * duration;
+            stateDuration = baseDuration / attackSpeedStat;
+            reloadDuration = baseDuration / attackSpeedStat;
+            fireTime = firePercentTime * stateDuration;
 
             aimRay = GetAimRay();
             isCrit = RollCrit();
 
-            StartAimMode(aimRay, duration * 1.5f);
+            StartAimMode(aimRay, stateDuration * 1.5f);
 
             PlayAnimation("LeftArm, Override", "ShootGun", "ShootGun.playbackRate", 1.8f);
         }
@@ -59,7 +62,7 @@ namespace EntityStates.Fish.Guns
                 Fire();
             }
 
-            if (fixedAge >= duration && isAuthority)
+            if (fixedAge >= stateDuration && isAuthority)
             {
                 outer.SetNextStateToMain();
                 return;
@@ -104,6 +107,14 @@ namespace EntityStates.Fish.Guns
             characterBody.AddSpreadBloom(spreadBloomValue);
 
             if (weaponController != null) weaponController.ConsumeAmmo();
+
+            //skillLocator.primary.cooldownOverride = reloadDuration;
+            if (skillLocator.primary.skillDef is FishWeaponSkillDef fishWeaponSkillDef)
+            {
+                fishWeaponSkillDef.pseudoCooldownRemaining = reloadDuration;
+            }
+
+            outer.SetNextStateToMain();
         }
 
         public override InterruptPriority GetMinimumInterruptPriority()

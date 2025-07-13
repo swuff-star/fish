@@ -28,7 +28,8 @@ namespace EntityStates.Fish
         protected virtual string MuzzleName => "Muzzle";
 
         private float fireTime;
-        private float duration;
+        private float stateDuration;
+        private float reloadDuration;
         private Ray aimRay;
         private bool isCrit;
 
@@ -38,13 +39,14 @@ namespace EntityStates.Fish
         {
             base.OnEnter();
 
-            duration = BaseDuration / attackSpeedStat;
-            fireTime = FirePercentTime * duration;
+            stateDuration = BaseDuration / attackSpeedStat;
+            reloadDuration = BaseDuration / attackSpeedStat;
+            fireTime = FirePercentTime * stateDuration;
 
             aimRay = GetAimRay();
             isCrit = RollCrit();
 
-            StartAimMode(aimRay, duration * 1.5f);
+            StartAimMode(aimRay, stateDuration * 1.5f);
 
             PlayAnimation("LeftArm, Override", "ShootGun", "ShootGun.playbackRate", 1.8f);
         }
@@ -59,7 +61,7 @@ namespace EntityStates.Fish
                 Fire();
             }
 
-            if (fixedAge >= duration && isAuthority)
+            if (fixedAge >= stateDuration && isAuthority)
             {
                 outer.SetNextStateToMain();
                 return;
@@ -104,6 +106,10 @@ namespace EntityStates.Fish
             characterBody.AddSpreadBloom(SpreadBloomValue);
 
             if (weaponController != null) weaponController.ConsumeAmmo();
+
+            skillLocator.primary.cooldownOverride = reloadDuration;
+
+            outer.SetNextStateToMain();
         }
 
         public override InterruptPriority GetMinimumInterruptPriority()
@@ -114,6 +120,8 @@ namespace EntityStates.Fish
         public override void OnExit()
         {
             base.OnExit();
+
+            skillLocator.primary.cooldownOverride = stateDuration;
         }
     }
 }

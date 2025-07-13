@@ -4,12 +4,15 @@ using EntityStates.Fish;
 using FishMod.Characters.Survivors.Fish.Components;
 using FishMod.Modules;
 using FishMod.Modules.Characters;
+using FishMod.Modules.Weapons;
 using FishMod.Modules.Weapons.Guns;
 using FishMod.Survivors.Fish.SkillStates;
 using RoR2;
 using RoR2.Skills;
+using RoR2.UI;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 using static RoR2.GenericPickupController;
@@ -447,6 +450,141 @@ namespace FishMod.Survivors.Fish
         {
             R2API.RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
             GlobalEventManager.onCharacterDeathGlobal += GlobalEventManager_onCharacterDeathGlobal;
+            On.RoR2.UI.SkillIcon.Update += SkillIcon_Update;
+        }
+
+        private void SkillIcon_Update(On.RoR2.UI.SkillIcon.orig_Update orig, SkillIcon self)
+        {
+            // unfortunately mostly the same logic as the original other than feeding our custom cooldown :/
+            if (self.targetSkill.skillDef is FishWeaponSkillDef fwsd)
+            {
+                self.CheckAndRegisterSkillChange();
+
+                if (self.tooltipProvider)
+                {
+                    Color bodyColor = self.targetSkill.characterBody.bodyColor;
+                    BodyIndex bodyIndex = self.targetSkill.characterBody.bodyIndex;
+                    SurvivorIndex survivorIndex = SurvivorCatalog.GetSurvivorIndexFromBodyIndex(bodyIndex);
+
+                    {
+                        Color.RGBToHSV(bodyColor, out float h, out float s, out float v);
+                        v = (v > 0.7f) ? 0.7f : v;
+                        bodyColor = Color.HSVToRGB(h, s, v);
+                    }
+
+                    self.tooltipProvider.titleColor = bodyColor;
+                    self.tooltipProvider.titleToken = self.targetSkill.skillNameToken;
+                    self.tooltipProvider.bodyToken = self.targetSkill.skillDescriptionToken;
+                }
+
+                float cooldownRemaining = fwsd.pseudoCooldownRemaining;
+                float totalCooldown = fwsd.basePseudoCooldown;
+                int skillStock = self.targetSkill.stock;
+                bool skillReady = ((skillStock > 0) || (cooldownRemaining <= 0f));
+                bool skillShouldShowAsReady = self.targetSkill.IsReady();
+                bool isSkillCooldownBlocked = self.targetSkill.isCooldownBlocked;
+                bool skillShouldShowStock = self.targetSkill.maxStock > 1 && self.targetSkill.skillDef.hideStockCount == false;
+
+                if (self.previousStock < skillStock && self.skillChanged == false)
+                {
+                    // we might wanna disable this. potentially f&$#ing annoying.
+                    Util.PlaySound("Play_UI_cooldownRefresh", RoR2Application.instance.gameObject);
+                }
+
+                if (self.animator)
+                {
+                    if (skillShouldShowStock)
+                    {
+                        self.animator.SetBool(self.animatorStackString, true);
+                    }
+                    else
+                    {
+                        self.animator.SetBool(self.animatorStackString, false);
+                    }
+                }
+
+                if (self.isReadyPanelObject)
+                {
+                    self.isReadyPanelObject.SetActive(skillShouldShowAsReady);
+                }
+
+                if (!self.wasReady && skillReady)
+                {
+                    if (self.flashPanelObject)
+                    {
+                        self.flashPanelObject.SetActive(true);
+                    }
+                }
+
+                if (self.cooldownText)
+                {
+                    if (skillReady || skillShouldShowAsReady || isSkillCooldownBlocked)
+                    {
+                        self.cooldownText.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        int thisFrameCoolDown = Mathf.CeilToInt(cooldownRemaining);
+                        if (self.previousCoolDownInt != thisFrameCoolDown)
+                        {
+                            // ughhhhhhhhhh
+                            StringBuilder stringBuilder = new StringBuilder();
+                            self.previousCoolDownInt = thisFrameCoolDown;
+                            stringBuilder.Clear();
+                            stringBuilder.AppendInt(thisFrameCoolDown);
+                            self.cooldownText.SetText(stringBuilder);
+                            self.cooldownText.gameObject.SetActive(true);
+                        }
+                    }
+                }
+
+                if (self.iconImage)
+                {
+                    self.iconImage.enabled = true;
+                    self.iconImage.color = skillShouldShowAsReady ? Color.white : Color.gray;
+                    self.iconImage.sprite = self.targetSkill.icon;
+                }
+
+                if (self.cooldownRemapPanel)
+                {
+                    float cooldownFraction = 1f;
+                    if (totalCooldown >= Mathf.Epsilon)
+                    {
+                        cooldownFraction = (1f - (cooldownRemaining / totalCooldown));
+                    }
+
+                    float alpha = cooldownFraction;
+                    self.cooldownRemapPanel.enabled = alpha < 1f;
+                    self.cooldownRemapPanel.color = new Color(1f, 1f, 1f, cooldownFraction);
+                }
+
+                if (self.stockText)
+                {
+                    if (skillShouldShowStock)
+                    {
+                        if (self.previousStock != skillStock)
+                        {
+                            StringBuilder stringBuilder = new StringBuilder();
+                            self.stockText.gameObject.SetActive(true);
+                            stringBuilder.Clear();
+                            stringBuilder.AppendInt(skillStock);
+                            self.stockText.SetText(stringBuilder);
+                        }
+                    }
+                    else
+                    {
+                        self.stockText.gameObject.SetActive(false);
+                    }
+                }
+
+                self.wasReady = skillReady;
+                self.previousStock = skillStock;
+                self.skillChanged = false;
+
+                return;
+            }
+
+            orig(self);
         }
 
         private void GlobalEventManager_onCharacterDeathGlobal(DamageReport report)

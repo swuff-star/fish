@@ -38,7 +38,7 @@ namespace FishMod.Modules.Guns
         public abstract int pickupAmmo { get; }
         public abstract float reloadDuration { get; }
         public abstract string ammoName { get; }
-        public abstract SkillDef primarySkillDef { get; }
+        public abstract FishWeaponSkillDef primarySkillDef { get; }
         public abstract GameObject modelPrefab { get; }
         public abstract FishWeaponDef.AnimationSet animationSet { get; }
         public abstract FishWeaponDef.AmmoType ammoType { get; }

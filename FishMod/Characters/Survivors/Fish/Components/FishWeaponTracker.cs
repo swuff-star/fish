@@ -30,6 +30,8 @@ namespace FishMod.Characters.Survivors.Fish.Components
         public int offhandIndex = 1;
         public int nextWeapon;
 
+        public float offhandRemainingCooldown = 0f;
+
         // ammo types
         public int currentBullets = 0;
         public int maxBullets = 255;

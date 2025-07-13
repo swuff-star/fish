@@ -1,4 +1,5 @@
-﻿using RoR2;
+﻿using FishMod.Modules.Weapons;
+using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -28,9 +29,12 @@ namespace EntityStates.Fish.Guns
         public static string muzzleName = "Muzzle";
 
         private float fireTime;
-        private float duration;
+        private float stateDuration;
+        private float reloadDuration;
         private Ray aimRay;
         private bool isCrit;
+
+        private FishWeaponSkillDef fwsd;
 
         private bool hasFired;
 
@@ -38,15 +42,25 @@ namespace EntityStates.Fish.Guns
         {
             base.OnEnter();
 
-            duration = baseDuration / attackSpeedStat;
-            fireTime = firePercentTime * duration;
+            stateDuration = baseDuration / attackSpeedStat;
+            fireTime = firePercentTime * stateDuration;
+
+            if (skillLocator.primary.skillDef is FishWeaponSkillDef fishWeaponSkillDef)
+            {
+                fwsd = fishWeaponSkillDef;
+                reloadDuration = fwsd.GetRechargeInterval(skillLocator.primary);
+            }
+            else
+            {
+                reloadDuration = baseDuration / attackSpeedStat;
+            }
 
             aimRay = GetAimRay();
             isCrit = RollCrit();
 
-            StartAimMode(aimRay, duration * 1.5f);
+            StartAimMode(aimRay, stateDuration * 1.5f);
 
-            PlayAnimation("LeftArm, Override", "ShootGun", "ShootGun.playbackRate", duration);
+            PlayAnimation("LeftArm, Override", "ShootGun", "ShootGun.playbackRate", stateDuration);
         }
 
         public override void FixedUpdate()
@@ -59,7 +73,8 @@ namespace EntityStates.Fish.Guns
                 Fire();
             }
 
-            if (fixedAge >= duration && isAuthority)
+            // this generally shouldn't be hit, since Fire() calls outer.SetNextStateToMain().
+            if (fixedAge >= stateDuration && isAuthority)
             {
                 outer.SetNextStateToMain();
                 return;
@@ -68,6 +83,8 @@ namespace EntityStates.Fish.Guns
 
         private void Fire()
         {
+            if (!isAuthority) return;
+
             Util.PlayAttackSpeedSound(fireSoundString, gameObject, attackSpeedStat);
 
             if (muzzleEffectPrefab)
@@ -104,6 +121,19 @@ namespace EntityStates.Fish.Guns
             characterBody.AddSpreadBloom(spreadBloomValue);
 
             if (weaponController != null) weaponController.ConsumeAmmo();
+
+            if (fwsd != null)
+            {
+
+            }
+
+            //skillLocator.primary.cooldownOverride = reloadDuration;
+            if (skillLocator.primary.skillDef is FishWeaponSkillDef fishWeaponSkillDef)
+            {
+                fishWeaponSkillDef.pseudoCooldownRemaining = reloadDuration;
+            }
+
+            outer.SetNextStateToMain();
         }
 
         public override InterruptPriority GetMinimumInterruptPriority()

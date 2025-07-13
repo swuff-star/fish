@@ -26,7 +26,6 @@ namespace FishMod.Characters.Survivors.Fish.Components
 
         // current + offhand weapons
         public FishWeaponDef weaponDef;
-        private FishWeaponDef lastWeaponDef;
 
         public int currentAmmo;
         public int currentMaxAmmo;
@@ -114,6 +113,9 @@ namespace FishMod.Characters.Survivors.Fish.Components
 
             weaponDef = weaponTracker.weaponData[index].weaponDef;
 
+            float cooldownRemaining = 0f;
+            if (skillLocator.primary.skillDef is FishWeaponSkillDef fwsd) cooldownRemaining = fwsd.pseudoCooldownRemaining;
+
             if (skillOverride != null)
             {
                 skillLocator.primary.UnsetSkillOverride(gameObject, skillOverride, GenericSkill.SkillOverridePriority.Network);
@@ -131,6 +133,13 @@ namespace FishMod.Characters.Survivors.Fish.Components
 
             skillLocator.primary.maxStock = weaponTracker.GetCurrentAmmoTypeMax();
             skillLocator.primary.stock = weaponTracker.GetCurrentAmmoTypeRemaining();
+            if (skillLocator.primary.skillDef is FishWeaponSkillDef fwsd2) fwsd2.pseudoCooldownRemaining = weaponTracker.offhandRemainingCooldown;
+
+            Debug.Log("FishWeaponController.EquipWeapon : Equipped weapon currently has " + weaponTracker.offhandRemainingCooldown + " remaining reload time");
+
+            weaponTracker.offhandRemainingCooldown = cooldownRemaining;
+
+            Debug.Log("FishWeaponController.EquipWeapon : Secondary currently has " + weaponTracker.offhandRemainingCooldown + " remaining reload time");
 
             Debug.Log("FishWeaponController.EquipWeapon : Primary override has " + skillLocator.primary.stock + " / " + skillLocator.primary.maxStock);
 
