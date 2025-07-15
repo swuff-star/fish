@@ -4,9 +4,13 @@ fish from nuclear throne
 
 DONE: 
 
-currently spawns with revolver. enemies drop ammo and guns occasionally. placeholder secondary/utility
+currently spawns with revolver.
 
-fiorst weapon you pick up goes to your secondary slot. special to switch. third gun replaces first gun.
+enemies drop ammo and guns occasionally. based on size/boss/elite status
+
+placeholder secondary/utility
+
+fiorst weapon you pick up goes to your secondary slot. special to switch. third gun picked up replaces first gun like in NT.
 
 
 TO-DO:
