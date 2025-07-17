@@ -35,6 +35,10 @@ namespace FishMod.Characters.Survivors.Fish.Components
 
         private FishWeaponTracker _weaponTracker;
 
+
+        private GameObject currentWeaponMdl;
+        private Transform heldTransform;
+
         private Inventory inventory
         {
             get
@@ -74,6 +78,8 @@ namespace FishMod.Characters.Survivors.Fish.Components
             childLocator = modelLocator.modelBaseTransform.GetComponentInChildren<ChildLocator>();
             animator = modelLocator.modelBaseTransform.GetComponentInChildren<Animator>();
             characterModel = modelLocator.modelBaseTransform.GetComponentInChildren<CharacterModel>();
+
+            heldTransform = childLocator.FindChild("GunTransform");
 
             Invoke("SetInventoryHook", 0.5f);
         }
@@ -147,6 +153,21 @@ namespace FishMod.Characters.Survivors.Fish.Components
             Debug.Log("FishWeaponController.EquipWeapon : Secondary currently has " + weaponTracker.offhandRemainingCooldown + " remaining reload time");
 
             Debug.Log("FishWeaponController.EquipWeapon : Primary override has " + skillLocator.primary.stock + " / " + skillLocator.primary.maxStock);
+
+            if (currentWeaponMdl != null)
+            {
+                Destroy(currentWeaponMdl);
+            }
+
+            // this shit will NOT network
+            // hopefully can reimplement using item displays?
+            // not hard to network if needed but this implementation isnt ideal given we already have systems for adding meshes when items are owned..
+            if (heldTransform != null)
+            {
+                currentWeaponMdl = Instantiate(weaponDef.modelPrefab, heldTransform);
+                currentWeaponMdl.layer = LayerIndex.noCollision.intVal;
+                currentWeaponMdl.transform.SetParent(heldTransform);
+            }
 
             if (onWeaponUpdate == null) return;
             onWeaponUpdate(this);

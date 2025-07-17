@@ -121,7 +121,8 @@ namespace FishMod.Modules.Guns
             if (modelPrefab)
             {
                 itemDef.pickupModelPrefab = FishSurvivor.instance.assetBundle.LoadAsset<GameObject>(weaponDef.modelPrefab.name + "Pickup");
-                Asset.ConvertAllRenderersToHopooShader(itemDef.pickupModelPrefab);
+                // Asset.ConvertAllRenderersToHopooShader(itemDef.pickupModelPrefab);
+                // we dont wanna do this to our sprites
             }
 
             // tell me why i can't set this tell me why this breaks the entire weapon when i do it this way

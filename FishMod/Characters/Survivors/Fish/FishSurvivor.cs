@@ -66,16 +66,8 @@ namespace FishMod.Survivors.Fish
         {
                 new CustomRendererInfo
                 {
-                    childName = "SwordModel",
-                    material = assetBundle.LoadMaterial("matHenry"),
-                },
-                new CustomRendererInfo
-                {
-                    childName = "GunModel",
-                },
-                new CustomRendererInfo
-                {
                     childName = "Model",
+                    material = assetBundle.LoadMaterial("matFishPlaceholder")
                 }
         };
 
@@ -127,6 +119,12 @@ namespace FishMod.Survivors.Fish
             AdditionalBodySetup();
 
             AddHooks();
+        }
+
+        public override void InitializeItemDisplays()
+        {
+            return; // nuh uh
+            // base.InitializeItemDisplays();
         }
 
         private void AdditionalBodySetup()
@@ -456,6 +454,7 @@ namespace FishMod.Survivors.Fish
         {
             new Revolver().Init();
             new Machinegun().Init();
+            new LaserPistol().Init();
         }
 
         private void AddHooks()
@@ -663,7 +662,7 @@ namespace FishMod.Survivors.Fish
                     report.victimIsBoss ||
                     hullClassification != HullClassification.Human;
 
-                if (true || eligibleWeaponDrop && Util.CheckRoll(8f, fishMaster))
+                if (eligibleWeaponDrop && Util.CheckRoll(8f, fishMaster))
                 {
                     bool isRobot = false;
                     int offset = -1;
@@ -755,9 +754,12 @@ namespace FishMod.Survivors.Fish
                     {
                         if (body.TryGetComponent(out FishWeaponController fwc))
                         {
+                            Log.Info("FishSurvivor.GenericPickupController_AttemptGrant : Weapon picked up by FWC body");
+                            fwc.GiveAmmoPackOfType(FishWeaponCatalog.GetWeaponDefFromItemDef(itemDef).ammoType);
+
                             if (self.chestGeneratedFrom == null || self.chestGeneratedFrom != fwc.chestBehavior)
                             {
-                                fwc.GiveAmmoPackOfType(FishWeaponCatalog.GetWeaponDefFromItemDef(itemDef).ammoType);
+                                // fwc.GiveAmmoPackOfType(FishWeaponCatalog.GetWeaponDefFromItemDef(itemDef).ammoType);
                             }
                         }
                         else

@@ -6,6 +6,9 @@ using RoR2.Projectile;
 using R2API;
 using UnityEngine.AddressableAssets;
 using FishMod.Characters.Survivors.Fish.Components;
+using UnityEngine.Networking;
+using UnityEngine.AddressableAssets;
+using HarmonyLib;
 
 namespace FishMod.Survivors.Fish
 {
@@ -23,6 +26,14 @@ namespace FishMod.Survivors.Fish
         // projectiles
         public static GameObject bombProjectilePrefab;
 
+        // bullet-related
+        public static GameObject bulletPrefab;
+        public static GameObject bulletGhostPrefab;
+        public static GameObject heavyBulletPrefab;
+
+        // laser-related
+        public static GameObject laserTracerPrefab;
+
         // pickups
         public static GameObject ammoPickupPrefab;
 
@@ -39,6 +50,9 @@ namespace FishMod.Survivors.Fish
 
             CreateProjectiles();
 
+            CreateBullets();
+            CreateLasers();
+
             CreatePickups();
         }
 
@@ -49,6 +63,161 @@ namespace FishMod.Survivors.Fish
 
             swordSwingEffect = _assetBundle.LoadEffect("HenrySwordSwingEffect", true);
             swordHitImpactEffect = _assetBundle.LoadEffect("ImpactHenrySlash");
+        }
+
+        // to-do: some of this stuff definitely will need to be generic methods that defines all the different variants
+        // like yeah bro just go and manually redefine every laser for laser brain
+        // wtf
+        private static void CreateBullets()
+        {
+            // regular bullet 
+            #region bullet
+            bulletGhostPrefab = _assetBundle.LoadAsset<GameObject>("BulletGhost");
+            if (bulletGhostPrefab == null)
+            {
+                Log.Error("FishAssets.CreateBulletEffects : Failed to initialize bullet ghost.");
+            }
+
+            ParticleSystem bulletParticle = bulletGhostPrefab.transform.Find("Glow")?.GetComponent<ParticleSystem>();
+            if (bulletParticle != null && bulletParticle.TryGetComponent(out ParticleSystemRenderer psr))
+            {
+                psr.material = Addressables.LoadAssetAsync<Material>("RoR2/Base/Common/VFX/matGenericFlash.mat").WaitForCompletion();
+            }
+
+            Light light = bulletGhostPrefab.transform.Find("Light")?.GetComponent<Light>();
+
+            bulletGhostPrefab.AddComponent<NetworkIdentity>();
+            bulletGhostPrefab.AddComponent<ProjectileGhostController>();
+
+            VFXAttributes vfx = bulletGhostPrefab.AddComponent<VFXAttributes>();
+            vfx.vfxPriority = VFXAttributes.VFXPriority.Always;
+            vfx.vfxIntensity = VFXAttributes.VFXIntensity.Low;
+            vfx.DoNotPool = false;
+            vfx.DoNotCullPool = false;
+
+            if (light != null)
+            {
+                vfx.optionalLights.AddItem(light);
+
+                FlickerLight flicker = bulletGhostPrefab.AddComponent<FlickerLight>();
+
+                flicker.sinWaves.AddItem(new Wave() { amplitude = 0.2f, frequency = 12f, cycleOffset = 1.2f });
+                flicker.sinWaves.AddItem(new Wave() { amplitude = 0.2f, frequency = 10f, cycleOffset = 2f });
+                flicker.sinWaves.AddItem(new Wave() { amplitude = 0.1f, frequency = 60f, cycleOffset = 0f });
+            }
+
+            bulletPrefab = PrefabAPI.InstantiateClone(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Lemurian/Fireball.prefab").WaitForCompletion(), "FishBulletProjectile");
+            if (bulletPrefab.TryGetComponent(out ProjectileController pc))
+            {
+                pc.ghostPrefab = bulletGhostPrefab;
+            }
+
+            if (bulletPrefab.TryGetComponent(out ProjectileSimple ps))
+            {
+                ps.desiredForwardSpeed = FishStaticValues.bulletSpeed;
+            }
+
+            if (bulletPrefab.TryGetComponent(out ProjectileSingleTargetImpact psti))
+            {
+                // psti.impactEffect = ;  later
+            }
+
+            if (bulletPrefab.TryGetComponent(out ProjectileDamage pd))
+            {
+                pd.damageType.damageType = DamageType.Generic;
+                pd.damageType.damageTypeExtended = DamageTypeExtended.Generic;
+                pd.damageType.damageSource = DamageSource.Primary;
+            }
+
+            // maybe could have sounds for bullets when they're flying past?
+            // little whooshing sound
+            foreach (AkEvent ak in bulletPrefab.GetComponents<AkEvent>())
+            {
+                UnityEngine.Object.Destroy(ak);
+            }
+
+            if (bulletPrefab.TryGetComponent(out AkGameObj akgo))
+            {
+                UnityEngine.Object.Destroy(akgo);
+            }
+
+            #endregion bullet
+        }
+
+        private static void CreateLasers()
+        {
+            laserTracerPrefab = PrefabAPI.InstantiateClone(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/CaptainDefenseMatrix/TracerCaptainDefenseMatrix.prefab").WaitForCompletion(), "FishLaserTracerPrefab");
+
+            laserTracerPrefab.AddComponent<NetworkIdentity>();
+
+            if (laserTracerPrefab == null)
+            {
+                Log.Error("FishAssets.CreateLasers : Failed to instantiate laser tracer!");
+            }
+
+            if (laserTracerPrefab.TryGetComponent(out EffectComponent ec))
+            {
+                // ec.soundName =   laser sound string here
+            }
+
+            if (laserTracerPrefab.TryGetComponent(out Tracer tracer))
+            {
+                // tracer.beamDensity =   ??;
+                // tracer.speed =   ??;
+                // tracer.length =   ??;
+            }
+
+            if (laserTracerPrefab.TryGetComponent(out LineRenderer renderer))
+            {
+                Material mat = Addressables.LoadAssetAsync<Material>("RoR2/Base/Captain/matCaptainDefenseMatrixLaser.mat").WaitForCompletion();
+                Material tracerMat = new Material(mat);
+
+                tracerMat.SetTexture("_RemapTex", _assetBundle.LoadAsset<Texture2D>("texRampLaser"));
+                renderer.material = tracerMat;
+            }
+
+            Material ringMat = Addressables.LoadAssetAsync<Material>("RoR2/Base/GreaterWisp/matOmniRing1GreaterWisp.mat").WaitForCompletion();
+
+            Transform startTransform = laserTracerPrefab.transform.Find("StartTransform");
+            if (startTransform != null)
+            {
+                Transform ring = startTransform.Find("Ring");
+                if (ring != null && ring.TryGetComponent(out ParticleSystem rps) && rps.TryGetComponent(out ParticleSystemRenderer rpsr)) 
+                {
+                    rps.startSize *= 0.3f;
+                    rpsr.material = ringMat;
+                }
+                Transform flash = startTransform.Find("Flash");
+                if (flash != null && flash.TryGetComponent(out ParticleSystem fps))
+                {
+                    fps.startColor = Color.green;
+                }
+            }
+
+            Transform tracerHead = laserTracerPrefab.transform.Find("TracerHead");
+            if (tracerHead != null)
+            {
+                Transform ring = tracerHead.Find("Ring");
+                if (ring != null && ring.TryGetComponent(out ParticleSystem rps) && rps.TryGetComponent(out ParticleSystemRenderer rpsr))
+                {
+                    rps.startSize *= 0.3f;
+                    rpsr.material = ringMat;
+                }
+                Transform flash = tracerHead.Find("Flash");
+                if (flash != null && flash.TryGetComponent(out ParticleSystem fps))
+                {
+                    fps.startColor = Color.green;
+                }
+                Transform light = tracerHead.Find("Point Light");
+                if (light != null && light.TryGetComponent(out Light l))
+                {
+                    l.color = Color.green;
+                }
+            }
+
+            Content.CreateAndAddEffectDef(laserTracerPrefab);
+
+            Log.Info("FishAssets.CreateLasers : Finished setting up lasers");
         }
 
         private static void CreateBombExplosionEffect()

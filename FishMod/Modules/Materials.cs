@@ -84,6 +84,10 @@ namespace FishMod.Modules
             {
                 tempMat.SetInt("_Cull", 0);
             }
+
+            // disable once fish backfaces fixed
+            tempMat.SetInt("_Cull", 0);
+
             //set this keyword in unity if you've set up your model for limb removal item displays (eg. goat hoof) by setting your model's vertex colors
             if (tempMat.IsKeywordEnabled("LIMBREMOVAL"))
             {

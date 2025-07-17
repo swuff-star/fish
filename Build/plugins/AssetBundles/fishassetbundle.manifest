@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 1888377809
+CRC: 3228606480
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 003b02ec7100db4c568f624c8034bd43
+    Hash: a3746cc6d55df8c5c501b93d39e7d14c
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 01ab68918a4dd982bcc4a740d1c90321
+    Hash: 9aafbb5d981bdd6265ca03829bc35158
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -61,6 +61,8 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 199
   Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
 - Class: 319
@@ -71,6 +73,7 @@ SerializeReferenceClassIdentifiers:
 Assets:
 - Assets/FishAssets/FishBundle/Icons/texIconMachinegun.png
 - Assets/FishAssets/FishBundle/Animation/clips/DefaultPose.anim
+- Assets/FishAssets/FishBundle/mdlFish.prefab
 - Assets/FishAssets/FishBundle/Icons/texMasteryAchievement.png
 - Assets/FishAssets/FishBundle/Materials/matRebellion.mat
 - Assets/FishAssets/FishBundle/Mesh/meshNeoCoat.mesh
@@ -90,25 +93,29 @@ Assets:
 - Assets/FishAssets/FishBundle/Icons/texStingerIcon.png
 - Assets/FishAssets/FishBundle/Icons/texHenryIcon.png
 - Assets/FishAssets/FishBundle/Mesh/meshHenryAlt.mesh
+- Assets/FishAssets/FishBundle/Pickups/mdlRevolverPickup.prefab
 - Assets/FishAssets/FishBundle/Mesh/meshRebellion.mesh
-- Assets/FishAssets/FishBundle/Textures/texBazooka.png
+- Assets/FishAssets/FishBundle/Pickups/mdlMachinegunPickup.prefab
 - Assets/FishAssets/FishBundle/Textures/texHenry.png
-- Assets/FishAssets/FishBundle/VFX/Materials/matDust.mat
+- Assets/FishAssets/FishBundle/mdlLaserRifle.prefab
 - Assets/FishAssets/FishBundle/Animation/clips/IdleAdditive.anim
 - Assets/FishAssets/FishBundle/HenryBombGhost.prefab
 - Assets/FishAssets/FishBundle/Animation/clips/WalkR.anim
 - Assets/FishAssets/FishBundle/Materials/matBoxingGlove.mat
-- Assets/FishAssets/FishBundle/VFX/Mesh/meshBoxingGlove.mesh
+- Assets/FishAssets/FishBundle/Textures/texBazooka.png
 - Assets/FishAssets/FishBundle/Textures/texShotgun.png
-- Assets/FishAssets/FishBundle/VFX/Textures/texSmoke.png
+- Assets/FishAssets/FishBundle/VFX/Mesh/meshBoxingGlove.mesh
 - Assets/FishAssets/FishBundle/VFX/Materials/matPunchEffect.mat
 - Assets/FishAssets/FishBundle/Icons/texBazookaOutIcon.png
+- Assets/FishAssets/FishBundle/VFX/Materials/matDust.mat
 - Assets/FishAssets/FishBundle/VFX/Textures/texSlash.png
+- Assets/FishAssets/FishBundle/VFX/Textures/texSmoke.png
+- Assets/FishAssets/FishBundle/Mesh/mdlFishPlaceholder.mesh
 - Assets/FishAssets/FishBundle/Mesh/MeshHenryGun.mesh
 - Assets/FishAssets/FishBundle/Materials/matDante.mat
 - Assets/FishAssets/FishBundle/Textures/texHenryJediEmission.png
 - Assets/FishAssets/FishBundle/VFX/Mesh/meshSwing.asset
-- Assets/FishAssets/FishBundle/VFX/BombExplosionEffect.prefab
+- Assets/FishAssets/FishBundle/mdlRevolver.prefab
 - Assets/FishAssets/FishBundle/VFX/HenrySwordSwingEffect.prefab
 - Assets/FishAssets/FishBundle/Animation/clips/RestIdleIn.anim
 - Assets/FishAssets/FishBundle/Icons/texPistolIcon.png
@@ -121,9 +128,10 @@ Assets:
 - Assets/FishAssets/FishBundle/VFX/Textures/texDust.png
 - Assets/FishAssets/FishBundle/Animation/clips/DescendFast.anim
 - Assets/FishAssets/FishBundle/FishDisplay.prefab
-- Assets/FishAssets/FishBundle/VFX/Materials/matFire.mat
+- Assets/FishAssets/FishBundle/Materials/matFishPlaceholder.mat
+- Assets/FishAssets/FishBundle/VFX/BulletGhost.prefab
 - Assets/FishAssets/FishBundle/VFX/HenryBazookaMuzzleFlash.prefab
-- Assets/FishAssets/FishBundle/VFX/Materials/matPunchImpact.mat
+- Assets/FishAssets/FishBundle/VFX/BombExplosionEffect.prefab
 - Assets/FishAssets/FishBundle/VFX/Materials/matTrail.mat
 - Assets/FishAssets/FishBundle/Materials/matHenryJedi.mat
 - Assets/FishAssets/FishBundle/Textures/texHenryDanteEmission.png
@@ -136,22 +144,25 @@ Assets:
 - Assets/FishAssets/FishBundle/Icons/texShotgunIcon.png
 - Assets/FishAssets/FishBundle/Animation/clips/IdleIn.anim
 - Assets/FishAssets/FishBundle/Icons/texBoxingGlovesIcon.png
-- Assets/FishAssets/FishBundle/VFX/Textures/texFire.tga
+- Assets/FishAssets/FishBundle/VFX/Materials/matPunchImpact.mat
 - Assets/FishAssets/FishBundle/Mesh/meshYamato.mesh
 - Assets/FishAssets/FishBundle/Animation/clips/AimPitch.anim
 - Assets/FishAssets/FishBundle/VFX/Materials/matEmbers.mat
 - Assets/FishAssets/FishBundle/VFX/Materials/matSlash.mat
 - Assets/FishAssets/FishBundle/Animation/clips/Slash1.anim
-- Assets/FishAssets/FishBundle/Materials/matBazookaRocket.mat
+- Assets/FishAssets/FishBundle/HenryDisplay.prefab
 - Assets/FishAssets/FishBundle/Animation/clips/MenuIdle.anim
 - Assets/FishAssets/FishBundle/VFX/Textures/texFistSwing.png
+- Assets/FishAssets/FishBundle/Materials/matBazookaRocket.mat
 - Assets/FishAssets/FishBundle/Icons/texSecondaryIcon.png
 - Assets/FishAssets/FishBundle/VFX/Textures/texSwingEffect.png
+- Assets/FishAssets/FishBundle/Pickups/mdlLaserRiflePickup.prefab
 - Assets/FishAssets/FishBundle/Animation/maskAimYaw.mask
+- Assets/FishAssets/FishBundle/VFX/Textures/texFire.tga
 - Assets/FishAssets/FishBundle/Animation/maskAimBazooka.mask
 - Assets/FishAssets/FishBundle/Icons/texBazookaIconScepter.png
 - Assets/FishAssets/FishBundle/VFX/Textures/texPunchImpact.png
-- Assets/FishAssets/FishBundle/mdlFish.prefab
+- Assets/FishAssets/FishBundle/mdlHenry.prefab
 - Assets/FishAssets/FishBundle/Animation/clips/Jump.anim
 - Assets/FishAssets/FishBundle/Mesh/meshPistol.mesh
 - Assets/FishAssets/FishBundle/Icons/texUziIcon.png
@@ -165,31 +176,38 @@ Assets:
 - Assets/FishAssets/FishBundle/Animation/clips/RestIdle.anim
 - Assets/FishAssets/FishBundle/VFX/Materials/matFistSwing.mat
 - Assets/FishAssets/FishBundle/Materials/matVergil.mat
+- Assets/FishAssets/FishBundle/Icons/texIconLaserPistol.png
 - Assets/FishAssets/FishBundle/VFX/HenryDustEffect.prefab
 - Assets/FishAssets/FishBundle/Materials/matHenry.mat
 - Assets/FishAssets/FishBundle/VFX/Mesh/meshPunchShockwave.mesh
 - Assets/FishAssets/FishBundle/Animation/clips/SprintL.anim
 - Assets/FishAssets/FishBundle/VFX/Materials/matAnimeShapes.mat
 - Assets/FishAssets/FishBundle/FishMonsterMaster.prefab
+- Assets/FishAssets/FishBundle/mdlMachinegun.prefab
 - Assets/FishAssets/FishBundle/HenryBazookaRocketGhost.prefab
 - Assets/FishAssets/FishBundle/Animation/animHenry.controller
 - Assets/FishAssets/FishBundle/Mesh/meshUzi.mesh
+- Assets/FishAssets/FishBundle/VFX/Materials/matFire.mat
 - Assets/FishAssets/FishBundle/Animation/clips/ThrowBomb.anim
-- Assets/FishAssets/FishBundle/VFX/Textures/texEmbers.png
+- Assets/FishAssets/FishBundle/Icons/texIconLaserRifle.png
 - Assets/FishAssets/FishBundle/Materials/matBazooka.mat
 - Assets/FishAssets/FishBundle/Textures/texBoxingGlove.png
 - Assets/FishAssets/FishBundle/VFX/Materials/matHitSparkPunch.mat
+- Assets/FishAssets/FishBundle/VFX/Textures/texEmbers.png
+- Assets/FishAssets/FishBundle/Textures/texRampLaser.png
 - Assets/FishAssets/FishBundle/Animation/maskGesture.mask
 - Assets/FishAssets/FishBundle/Animation/clips/MenuIdleIn.anim
+- Assets/FishAssets/FishBundle/Pickups/mdlLaserPistolPickup.prefab
 - Assets/FishAssets/FishBundle/VFX/Textures/texHenrySwing2.png
 - Assets/FishAssets/FishBundle/Materials/matRoy.mat
 - Assets/FishAssets/FishBundle/Icons/texMainSkin.png
 - Assets/FishAssets/FishBundle/VFX/HenryBazookaExplosionEffect.prefab
 - Assets/FishAssets/FishBundle/Icons/texGrandMasteryAchievement.png
-- Assets/FishAssets/FishBundle/Textures/texHenryNeo.png
+- Assets/FishAssets/FishBundle/mdlLaserPistol.prefab
 - Assets/FishAssets/FishBundle/Icons/texVergilAchievement.png
 - Assets/FishAssets/FishBundle/VFX/Textures/texHitSpark.png
 - Assets/FishAssets/FishBundle/Animation/maskBandana.mask
+- Assets/FishAssets/FishBundle/Textures/texHenryNeo.png
 - Assets/FishAssets/FishBundle/VFX/Textures/texRipple.png
 - Assets/FishAssets/FishBundle/Animation/clips/WalkL.anim
 - Assets/FishAssets/FishBundle/VFX/Materials/matSwingShadow.mat
@@ -214,4 +232,5 @@ Assets:
 - Assets/FishAssets/FishBundle/Animation/clips/AimYaw.anim
 - Assets/FishAssets/FishBundle/Mesh/meshHenrySword.mesh
 - Assets/FishAssets/FishBundle/Icons/texDanteAchievement.png
+- Assets/FishAssets/FishBundle/Textures/texFishPlaceholder.png
 Dependencies: []

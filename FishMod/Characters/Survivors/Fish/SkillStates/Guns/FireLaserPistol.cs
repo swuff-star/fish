@@ -4,13 +4,15 @@ using System.Text;
 
 namespace EntityStates.Fish.Guns
 {
-    public class FireMachinegun : BaseShootProjectile
+    public class FireLaserPistol : BaseShootHitscan
     {
         public override void OnEnter()
         {
-            baseDuration = 0.2f;
-            maxSpread = 1.5f;
-            baseForce = baseDamageCoefficient * 100f;
+            baseDuration = 0.3f;
+            baseTimeBetweenShots = 0.01f;
+            minShotsToFire = 5;
+            maxShotsToFire = 5;
+
             base.OnEnter();
         }
     }

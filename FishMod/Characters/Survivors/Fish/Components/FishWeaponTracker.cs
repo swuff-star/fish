@@ -222,10 +222,7 @@ namespace FishMod.Characters.Survivors.Fish.Components
                     break;
             }
 
-            if (ammoType == activeAmmo)
-            {
-                bodySkillLocator.primary.stock = GetAmmoTypeCount(activeAmmo);
-            }
+            bodySkillLocator.primary.stock = GetAmmoTypeCount(activeAmmo);
         }
 
         public int GetFishAdjustedAmmoCount(int amount)
