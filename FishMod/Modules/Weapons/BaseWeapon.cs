@@ -35,6 +35,7 @@ namespace FishMod.Modules.Guns
         public abstract GameObject crosshairPrefab { get; }
         public abstract int magSize { get; }
         public abstract float magPickupMultiplier { get; }
+        public abstract int firstAvailableStage { get; }
         public abstract int pickupAmmo { get; }
         public abstract float reloadDuration { get; }
         public abstract string ammoName { get; }
@@ -85,6 +86,7 @@ namespace FishMod.Modules.Guns
                 crosshairPrefab = crosshairPrefab,
                 magSize = magSize,
                 magPickupMultiplier = magPickupMultiplier,
+                firstAvailableStage = firstAvailableStage,
                 pickupAmmo = pickupAmmo,
                 reloadDuration = reloadDuration,
                 ammoName = ammoName,

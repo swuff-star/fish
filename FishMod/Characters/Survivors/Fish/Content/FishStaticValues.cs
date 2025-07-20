@@ -12,8 +12,18 @@ namespace FishMod.Survivors.Fish
 
         public const float bulletDamageCoefficient = 1.5f;
 
-        public const float laserDamageCoefficient = 1f;
-
         public const float bulletSpeed = 160f;
+
+        public const float shellDamageCoefficient = 1.5f;
+
+        public const float shellFalloffDelay = 0.2f;
+
+        public const float shellFalloffMultiplier = 0.6666667f;
+
+        public const float shellLifetime = 2f;
+
+        public const float shellSpeed = 80f;
+
+        public const float laserDamageCoefficient = 1f;
     }
 }

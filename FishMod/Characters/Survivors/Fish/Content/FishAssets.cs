@@ -31,6 +31,10 @@ namespace FishMod.Survivors.Fish
         public static GameObject bulletGhostPrefab;
         public static GameObject heavyBulletPrefab;
 
+        // shell-related
+        public static GameObject shellPrefab;
+        public static GameObject shellGhostPrefab;
+
         // laser-related
         public static GameObject laserTracerPrefab;
 
@@ -51,6 +55,7 @@ namespace FishMod.Survivors.Fish
             CreateProjectiles();
 
             CreateBullets();
+            CreateShells();
             CreateLasers();
 
             CreatePickups();
@@ -142,6 +147,92 @@ namespace FishMod.Survivors.Fish
             }
 
             #endregion bullet
+        }
+
+        private static void CreateShells()
+        {
+            // regular shell 
+            #region shell
+            shellGhostPrefab = _assetBundle.LoadAsset<GameObject>("ShellGhost");
+            if (shellGhostPrefab == null)
+            {
+                Log.Error("FishAssets.CreateBulletEffects : Failed to initialize shell ghost.");
+            }
+
+            ParticleSystem shellParticle = shellGhostPrefab.transform.Find("Glow")?.GetComponent<ParticleSystem>();
+            if (shellParticle != null && shellParticle.TryGetComponent(out ParticleSystemRenderer psr))
+            {
+                psr.material = Addressables.LoadAssetAsync<Material>("RoR2/Base/Common/VFX/matGenericFlash.mat").WaitForCompletion();
+            }
+
+            Light light = shellGhostPrefab.transform.Find("Light")?.GetComponent<Light>();
+
+            shellGhostPrefab.AddComponent<NetworkIdentity>();
+            shellGhostPrefab.AddComponent<ProjectileGhostController>();
+
+            VFXAttributes vfx = shellGhostPrefab.AddComponent<VFXAttributes>();
+            vfx.vfxPriority = VFXAttributes.VFXPriority.Always;
+            vfx.vfxIntensity = VFXAttributes.VFXIntensity.Low;
+            vfx.DoNotPool = false;
+            vfx.DoNotCullPool = false;
+
+            if (light != null)
+            {
+                vfx.optionalLights.AddItem(light);
+
+                FlickerLight flicker = bulletGhostPrefab.AddComponent<FlickerLight>();
+
+                flicker.sinWaves.AddItem(new Wave() { amplitude = 0.2f, frequency = 12f, cycleOffset = 1.2f });
+                flicker.sinWaves.AddItem(new Wave() { amplitude = 0.2f, frequency = 10f, cycleOffset = 2f });
+                flicker.sinWaves.AddItem(new Wave() { amplitude = 0.1f, frequency = 60f, cycleOffset = 0f });
+            }
+
+            shellPrefab = PrefabAPI.InstantiateClone(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Lemurian/Fireball.prefab").WaitForCompletion(), "FishBulletProjectile");
+            if (shellPrefab.TryGetComponent(out ProjectileController pc))
+            {
+                pc.ghostPrefab = shellGhostPrefab;
+            }
+
+            if (shellPrefab.TryGetComponent(out ProjectileSimple ps))
+            {
+                ps.desiredForwardSpeed = FishStaticValues.shellSpeed;
+                ps.lifetime = FishStaticValues.shellLifetime;
+                ps.enableVelocityOverLifetime = true;
+
+                ps.velocityOverLifetime.AddKey(new Keyframe(0f, 1f, 0f, 0f));
+                ps.velocityOverLifetime.AddKey(new Keyframe(0.85f, 1f, 0f, 0f));
+
+                ps.velocityOverLifetime.AddKey(new Keyframe(0.925f, 0.5f, 0f, 0f));
+                ps.velocityOverLifetime.AddKey(new Keyframe(1f, 0f, 0f, 0f));
+            }
+
+            if (shellPrefab.TryGetComponent(out ProjectileSingleTargetImpact psti))
+            {
+                // psti.impactEffect = ;  later
+            }
+
+            if (shellPrefab.TryGetComponent(out ProjectileDamage pd))
+            {
+                pd.damageType.damageType = DamageType.Generic;
+                pd.damageType.damageTypeExtended = DamageTypeExtended.Generic;
+                pd.damageType.damageSource = DamageSource.Primary;
+
+                shellPrefab.AddComponent<ShellBehavior>();
+            }
+
+            // maybe could have sounds for bullets when they're flying past?
+            // little whooshing sound
+            foreach (AkEvent ak in shellPrefab.GetComponents<AkEvent>())
+            {
+                UnityEngine.Object.Destroy(ak);
+            }
+
+            if (bulletPrefab.TryGetComponent(out AkGameObj akgo))
+            {
+                UnityEngine.Object.Destroy(akgo);
+            }
+
+            #endregion shell
         }
 
         private static void CreateLasers()

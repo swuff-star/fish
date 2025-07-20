@@ -143,7 +143,7 @@ namespace EntityStates.Fish
                 {
                     if (hitInfo.hitHurtBox != null)
                     {
-                        Log.Debug("BaseShootHitscan.Fire : Hitscan callback");
+                        Log.Debug("BaseShootHitscan.Fire : Hitscan callback with bullet radius of " + radius);
                         radius *= 0.8f;
                     }
                     return true;

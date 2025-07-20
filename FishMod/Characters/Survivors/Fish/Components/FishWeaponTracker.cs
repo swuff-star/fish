@@ -165,6 +165,16 @@ namespace FishMod.Characters.Survivors.Fish.Components
                     break;
             }
         }
+
+        [ConCommand(commandName = "fish_max_ammo", flags = ConVarFlags.Cheat, helpText = "Maxes out Fish's ammo.")]
+        public void MaxAllAmmo()
+        {
+            currentBullets = maxBullets;
+            currentShells = maxShells;
+            currentExplosives = maxExplosives;
+            currentBolts = maxBolts;
+            currentLasers = maxLasers;
+        }
         public void SpendCurrentAmmo(int amount)
         {
             switch (activeAmmo)
@@ -383,7 +393,7 @@ namespace FishMod.Characters.Survivors.Fish.Components
                 // if we can't find one from that, just give revolver
                 else
                 {
-                    startingWeapon = Revolver.instance.weaponDef;
+                    startingWeapon = Shotgun.instance.weaponDef;
                 }
 
                 if (startingWeapon == null)

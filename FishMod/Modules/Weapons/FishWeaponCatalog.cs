@@ -81,7 +81,7 @@ namespace FishMod.Modules.Weapons
                 if (stage <= scenesCleared)
                     availableWeapons.Add(fwd);
 
-                if (stage < Math.Max(scenesCleared, 2))
+                if (stage < scenesCleared)
                     availableWeaponsMonster.Add(fwd);
 
                 if (stage <= scenesCleared + 1)

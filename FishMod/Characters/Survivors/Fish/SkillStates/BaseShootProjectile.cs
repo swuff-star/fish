@@ -29,6 +29,9 @@ namespace EntityStates.Fish.Guns
         public static float spreadPitchScale = 1f;
         public static float spreadBloomValue = 0.3f;
         public static string muzzleName = "Muzzle";
+        public static bool repeatSound = false;
+        public static bool spreadShots = false;
+        public int ammoToComsume = 1;
 
         private float fireTime;
         private float timeSinceLastShot;
@@ -38,6 +41,7 @@ namespace EntityStates.Fish.Guns
         private float reloadDuration;
         private Ray aimRay;
         private bool isCrit;
+        private bool hasPlayedSound;
 
         private FishWeaponSkillDef fwsd;
 
@@ -96,6 +100,17 @@ namespace EntityStates.Fish.Guns
         {
             if (!isAuthority) return;
 
+            if (!hasPlayedSound || repeatSound)
+            {
+                Util.PlayAttackSpeedSound(fireSoundString, gameObject, attackSpeedStat);
+                hasPlayedSound = true;
+            }
+
+            if (spreadShots)
+            {
+                aimRay.direction = Util.ApplySpread(aimRay.direction, minSpread, maxSpread, spreadYawScale, spreadPitchScale);
+            }
+
             Util.PlayAttackSpeedSound(fireSoundString, gameObject, attackSpeedStat);
 
             if (muzzleEffectPrefab)
@@ -141,7 +156,7 @@ namespace EntityStates.Fish.Guns
         {
             base.OnExit();
 
-            if (weaponController != null) weaponController.ConsumeAmmo();
+            if (weaponController != null) weaponController.ConsumeAmmo(ammoToComsume);
 
             if (skillLocator.primary.skillDef is FishWeaponSkillDef fishWeaponSkillDef)
             {

@@ -17,7 +17,7 @@ namespace FishMod.Survivors.Fish
             Modules.Content.AddEntityState(typeof(SwapWeapons));
 
             // gun states
-            Modules.Content.AddEntityState(typeof(FireRevolver));
+            Modules.Content.AddEntityState(typeof(FireShotgun));
             Modules.Content.AddEntityState(typeof(FireMachinegun));
             Modules.Content.AddEntityState(typeof(FireLaserPistol));
         }

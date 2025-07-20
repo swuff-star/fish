@@ -246,7 +246,7 @@ namespace FishMod.Survivors.Fish
             // Skills.AddPrimarySkills(bodyPrefab, primarySkillDef1);
 
             // assign revolver as primary
-            if (Revolver.instance.primarySkillDef != null)
+            if (Shotgun.instance.primarySkillDef != null)
             {
                 Skills.AddPrimarySkills(bodyPrefab, Revolver.instance.primarySkillDef);
             }
@@ -454,6 +454,8 @@ namespace FishMod.Survivors.Fish
         {
             new Revolver().Init();
             new Machinegun().Init();
+            new Shotgun().Init();
+            new DoubleShotgun().Init();
             new LaserPistol().Init();
         }
 

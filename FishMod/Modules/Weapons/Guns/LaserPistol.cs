@@ -15,6 +15,7 @@ namespace FishMod.Modules.Weapons.Guns
         public override GameObject crosshairPrefab => null;
         public override int magSize => 7;
         public override float magPickupMultiplier => 1;
+        public override int firstAvailableStage => 0;
         public override int pickupAmmo => 32;
         public override float reloadDuration => 0.2f;
         public override string ammoName => "Lasers";
