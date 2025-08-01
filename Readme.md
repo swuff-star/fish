@@ -13,30 +13,24 @@ placeholder secondary/utility
 fiorst weapon you pick up goes to your secondary slot. special to switch. third gun picked up replaces first gun like in NT.
 
 
-TO-DO:
+TO-DO/ONGOING:
+
+basic weapon projectile types (bolt, grenade)
+
+remaining tier 0s for mvp (crossbow, grenade launcher)
+
+ammo ui / better indicators. miserable to track without
+
+melee weapons that go over secondary. can only hold one melee
+
+secondary- melee, default is guitar. swings in an arc and deflects projectiles
+
+utility- fish can roll. basically what placeholder is lol. just see how we can refine it (probably remove armor and lower duration/cd heavily. also allow shooting during)
 
 weapon/ammo chests
 
-actual gun placeholders taht are good and not fhe fucking clover i hate
+real special- need to add rads and all that UGHHHHHHHH scope for another list. but with enough rads your special skill changes to 'mutate' and you pick one of four passives
 
-basic weapon projectile types (bullet, slug, bolt, grenade, laser (just a tracer hitscan))
+cooler weapons
 
-lotsa guns
-
-
-secondary- guitar. swings in an arc and deflects projectiles
-
-melee weapons eventually that go over secondary. can only hold one melee
-
-
-utility- fish can roll. basically what placeholder is lol
-
-
-special- keep swap. but add rads meter.
-
-pick a perma passive ever level
-
-and also rad pickups
-
-
-[and past that?](https://itisamystery.com/)
+[???????](https://itisamystery.com/)
